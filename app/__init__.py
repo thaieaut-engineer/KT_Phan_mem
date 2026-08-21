@@ -12,6 +12,8 @@ def create_app():
 
     db.init_app(app)
 
+    from app.models import Category, Product
+
     from app.routes.home import home_bp
     app.register_blueprint(home_bp)
 
