@@ -1,0 +1,1 @@
+console.log("PetShop JavaScript is running!");
