@@ -1,0 +1,556 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Sản phẩm - PetShop
+{% endblock %}
+
+
+{% block content %}
+
+<section class="container py-5">
+
+    <!-- =========================
+         TITLE
+    ========================== -->
+
+    <div class="text-center mb-5">
+
+        <h1 class="fw-bold">
+            Tất cả sản phẩm
+        </h1>
+
+        <p class="text-muted">
+            Khám phá các sản phẩm dành cho thú cưng
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         SEARCH + FILTER
+    ========================== -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <form
+                method="GET"
+                action="{{ url_for('product.index') }}"
+            >
+
+                <div class="row g-3">
+
+
+                    <!-- SEARCH -->
+
+                    <div class="col-lg-5">
+
+                        <label class="form-label">
+                            Tìm kiếm sản phẩm
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-search"></i>
+                            </span>
+
+                            <input
+                                type="text"
+                                name="keyword"
+                                class="form-control"
+                                placeholder="Nhập tên sản phẩm..."
+                                value="{{ keyword }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CATEGORY -->
+
+                    <div class="col-lg-3">
+
+                        <label class="form-label">
+                            Danh mục
+                        </label>
+
+                        <select
+                            name="category"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Tất cả danh mục
+                            </option>
+
+                            {% for category in categories %}
+
+                            <option
+                                value="{{ category.id }}"
+                                {% if selected_category|string == category.id|string %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ category.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- SORT -->
+
+                    <div class="col-lg-3">
+
+                        <label class="form-label">
+                            Sắp xếp
+                        </label>
+
+                        <select
+                            name="sort"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Mới nhất
+                            </option>
+
+                            <option
+                                value="price_asc"
+                                {% if selected_sort == "price_asc" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Giá thấp → cao
+                            </option>
+
+                            <option
+                                value="price_desc"
+                                {% if selected_sort == "price_desc" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Giá cao → thấp
+                            </option>
+
+                            <option
+                                value="name_asc"
+                                {% if selected_sort == "name_asc" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Tên A → Z
+                            </option>
+
+                            <option
+                                value="name_desc"
+                                {% if selected_sort == "name_desc" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Tên Z → A
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+
+                    <div class="col-lg-1 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-petshop w-100"
+                        >
+                            <i class="bi bi-search"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         RESULT INFO
+    ========================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div class="text-muted">
+
+            Tìm thấy
+            <strong>
+                {{ pagination.total }}
+            </strong>
+            sản phẩm
+
+        </div>
+
+
+        {% if keyword or selected_category or selected_sort %}
+
+        <a
+            href="{{ url_for('product.index') }}"
+            class="btn btn-outline-secondary btn-sm"
+        >
+            <i class="bi bi-x-circle"></i>
+            Xóa bộ lọc
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =========================
+         PRODUCT LIST
+    ========================== -->
+
+    <div class="row g-4">
+
+        {% for product in products %}
+
+        <div class="col-12 col-sm-6 col-lg-3">
+
+            <div class="card product-card h-100">
+
+
+                <!-- IMAGE -->
+
+                <div class="product-image-container">
+
+                    {% if product.image %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/' + product.image
+                        ) }}"
+                        class="product-image"
+                        alt="{{ product.name }}"
+                    >
+
+                    {% else %}
+
+                    <div class="no-image">
+                        🐾
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- BODY -->
+
+                <div class="card-body d-flex flex-column">
+
+                    <h5 class="card-title">
+
+                        {{ product.name }}
+
+                    </h5>
+
+
+                    <p class="text-muted small">
+
+                        {{ product.description[:90]
+                           if product.description
+                           else "Sản phẩm chất lượng dành cho thú cưng." }}
+
+                    </p>
+
+
+                    <!-- PRICE -->
+
+                    <div class="mt-auto">
+
+                        {% if product.sale_price %}
+
+                        <div class="old-price">
+
+                            {{ "{:,.0f}".format(product.price) }}
+                            VNĐ
+
+                        </div>
+
+                        <div class="price">
+
+                            {{ "{:,.0f}".format(product.sale_price) }}
+                            VNĐ
+
+                        </div>
+
+                        {% else %}
+
+                        <div class="price">
+
+                            {{ "{:,.0f}".format(product.price) }}
+                            VNĐ
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <!-- STOCK -->
+
+                        {% if product.stock > 0 %}
+
+                        <div class="text-success small mt-2">
+
+                            <i class="bi bi-check-circle"></i>
+
+                            Còn {{ product.stock }} sản phẩm
+
+                        </div>
+
+                        {% else %}
+
+                        <div class="text-danger small mt-2">
+
+                            <i class="bi bi-x-circle"></i>
+
+                            Hết hàng
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <!-- BUTTONS -->
+
+                        <div class="d-grid gap-2 mt-3">
+
+                            <a
+                                href="#"
+                                class="btn btn-outline-dark"
+                            >
+                                <i class="bi bi-eye"></i>
+                                Xem chi tiết
+                            </a>
+
+
+                            {% if product.stock > 0 %}
+
+                            <button
+                                class="btn btn-petshop"
+                            >
+                                <i class="bi bi-cart-plus"></i>
+                                Thêm vào giỏ
+                            </button>
+
+                            {% else %}
+
+                            <button
+                                class="btn btn-secondary"
+                                disabled
+                            >
+                                Hết hàng
+                            </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <!-- NO RESULT -->
+
+        <div class="col-12">
+
+            <div class="text-center py-5">
+
+                <div style="font-size: 80px;">
+                    🔍
+                </div>
+
+                <h4>
+                    Không tìm thấy sản phẩm
+                </h4>
+
+                <p class="text-muted">
+                    Hãy thử từ khóa hoặc danh mục khác.
+                </p>
+
+                <a
+                    href="{{ url_for('product.index') }}"
+                    class="btn btn-petshop"
+                >
+                    Xem tất cả sản phẩm
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- =========================
+         PAGINATION
+    ========================== -->
+
+    {% if pagination.pages > 1 %}
+
+    <nav class="mt-5">
+
+        <ul class="pagination justify-content-center">
+
+
+            <!-- PREVIOUS -->
+
+            <li
+                class="page-item
+                {% if not pagination.has_prev %}
+                    disabled
+                {% endif %}"
+            >
+
+                {% if pagination.has_prev %}
+
+                <a
+                    class="page-link"
+                    href="{{ url_for(
+                        'product.index',
+                        page=pagination.prev_num,
+                        keyword=keyword,
+                        category=selected_category,
+                        sort=selected_sort
+                    ) }}"
+                >
+                    &laquo;
+                </a>
+
+                {% else %}
+
+                <span class="page-link">
+                    &laquo;
+                </span>
+
+                {% endif %}
+
+            </li>
+
+
+            <!-- PAGES -->
+
+            {% for page_num in pagination.iter_pages(
+                left_edge=1,
+                right_edge=1,
+                left_current=2,
+                right_current=2
+            ) %}
+
+                {% if page_num %}
+
+                <li
+                    class="page-item
+                    {% if page_num == pagination.page %}
+                        active
+                    {% endif %}"
+                >
+
+                    <a
+                        class="page-link"
+                        href="{{ url_for(
+                            'product.index',
+                            page=page_num,
+                            keyword=keyword,
+                            category=selected_category,
+                            sort=selected_sort
+                        ) }}"
+                    >
+
+                        {{ page_num }}
+
+                    </a>
+
+                </li>
+
+                {% else %}
+
+                <li class="page-item disabled">
+
+                    <span class="page-link">
+                        ...
+                    </span>
+
+                </li>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            <!-- NEXT -->
+
+            <li
+                class="page-item
+                {% if not pagination.has_next %}
+                    disabled
+                {% endif %}"
+            >
+
+                {% if pagination.has_next %}
+
+                <a
+                    class="page-link"
+                    href="{{ url_for(
+                        'product.index',
+                        page=pagination.next_num,
+                        keyword=keyword,
+                        category=selected_category,
+                        sort=selected_sort
+                    ) }}"
+                >
+                    &raquo;
+                </a>
+
+                {% else %}
+
+                <span class="page-link">
+                    &raquo;
+                </span>
+
+                {% endif %}
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
