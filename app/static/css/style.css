@@ -442,3 +442,41 @@ footer {
 
     justify-content: center;
 }
+
+/* ========================================
+   CART
+======================================== */
+
+.cart-item {
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-image {
+    width: 80px;
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f8f9fa;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.cart-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+.cart-image span {
+    font-size: 35px;
+}

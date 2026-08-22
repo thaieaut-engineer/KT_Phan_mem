@@ -353,12 +353,42 @@ Sản phẩm - PetShop
 
                             {% if product.stock > 0 %}
 
-                            <button
-                                class="btn btn-petshop"
-                            >
-                                <i class="bi bi-cart-plus"></i>
-                                Thêm vào giỏ
-                            </button>
+                            <form
+    method="POST"
+    action="{{ url_for(
+        'cart.add',
+        product_id=product.id
+    ) }}"
+    class="mt-2"
+>
+
+    <input
+        type="hidden"
+        name="quantity"
+        value="1"
+    >
+
+    <button
+        type="submit"
+        class="btn btn-petshop w-100"
+        {% if product.stock <= 0 %}disabled{% endif %}
+    >
+
+        {% if product.stock > 0 %}
+
+            <i class="bi bi-cart-plus"></i>
+            Thêm vào giỏ
+
+        {% else %}
+
+            <i class="bi bi-x-circle"></i>
+            Hết hàng
+
+        {% endif %}
+
+    </button>
+
+</form>
 
                             {% else %}
 

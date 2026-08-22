@@ -170,18 +170,18 @@
         <!-- CART -->
 
         <a
-            href="#"
-            class="header-link cart-link"
-            title="Giỏ hàng"
-        >
+    href="{{ url_for('cart.index') }}"
+    class="header-link cart-link"
+    title="Giỏ hàng"
+>
 
-            <i class="bi bi-cart3"></i>
+    <i class="bi bi-cart3"></i>
 
-            <span class="cart-badge">
-                0
-            </span>
+    <span class="cart-badge">
+        {{ cart_count }}
+    </span>
 
-        </a>
+</a>
 
 
         <!-- LOGOUT -->

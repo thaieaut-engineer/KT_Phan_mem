@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block title %}
+Giỏ hàng - PetShop
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <h1 class="fw-bold mb-4">
+        <i class="bi bi-cart3"></i>
+        Giỏ hàng
+    </h1>
+
+
+    <!-- FLASH MESSAGE -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% for category, message in messages %}
+
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+
+    <!-- ================================================= -->
+    <!-- CART HAS ITEMS -->
+    <!-- ================================================= -->
+
+    {% if cart and cart.items %}
+
+        <div class="row g-4">
+
+            <!-- ============================= -->
+            <!-- CART ITEMS -->
+            <!-- ============================= -->
+
+            <div class="col-lg-8">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body p-0">
+
+                        {% for item in cart.items %}
+
+                            {% if item.product.sale_price is not none %}
+
+                                {% set price = item.product.sale_price %}
+
+                            {% else %}
+
+                                {% set price = item.product.price %}
+
+                            {% endif %}
+
+
+                            <div class="cart-item p-4">
+
+                                <div class="row align-items-center g-3">
+
+
+                                    <!-- IMAGE -->
+
+                                    <div class="col-3 col-md-2">
+
+                                        <div class="cart-image">
+
+                                            {% if item.product.image %}
+
+                                                <img
+                                                    src="{{ url_for(
+                                                        'static',
+                                                        filename='images/' ~ item.product.image
+                                                    ) }}"
+                                                    alt="{{ item.product.name }}"
+                                                >
+
+                                            {% else %}
+
+                                                <span>🐾</span>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- PRODUCT NAME -->
+
+                                    <div class="col-9 col-md-4">
+
+                                        <h5 class="mb-1">
+
+                                            {{ item.product.name }}
+
+                                        </h5>
+
+                                        <div class="text-muted">
+
+                                            {{ "{:,.0f}".format(price) }}
+                                            VNĐ
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- QUANTITY -->
+
+                                    <div class="col-6 col-md-3">
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for(
+                                                'cart.update',
+                                                item_id=item.id
+                                            ) }}"
+                                        >
+
+                                            <div class="input-group">
+
+                                                <input
+                                                    type="number"
+                                                    name="quantity"
+                                                    class="form-control"
+                                                    value="{{ item.quantity }}"
+                                                    min="1"
+                                                    max="{{ item.product.stock }}"
+                                                    required
+                                                >
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-outline-secondary"
+                                                    title="Cập nhật"
+                                                >
+
+                                                    <i class="bi bi-arrow-repeat"></i>
+
+                                                </button>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+
+                                    <!-- SUBTOTAL -->
+
+                                    <div class="col-4 col-md-2 text-end">
+
+                                        <strong>
+
+                                            {{ "{:,.0f}".format(
+                                                price * item.quantity
+                                            ) }}
+
+                                            VNĐ
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <!-- DELETE -->
+
+                                    <div class="col-2 col-md-1 text-end">
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for(
+                                                'cart.remove',
+                                                item_id=item.id
+                                            ) }}"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-link text-danger"
+                                                title="Xóa sản phẩm"
+                                            >
+
+                                                <i class="bi bi-trash"></i>
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- ORDER SUMMARY -->
+            <!-- ============================= -->
+
+            <div class="col-lg-4">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body p-4">
+
+                        <h4 class="fw-bold mb-4">
+                            Tổng đơn hàng
+                        </h4>
+
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <span>
+                                Tạm tính
+                            </span>
+
+                            <strong>
+                                {{ "{:,.0f}".format(total) }} VNĐ
+                            </strong>
+
+                        </div>
+
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <span>
+                                Phí vận chuyển
+                            </span>
+
+                            <strong class="text-success">
+                                Miễn phí
+                            </strong>
+
+                        </div>
+
+
+                        <hr>
+
+
+                        <div class="d-flex justify-content-between mb-4">
+
+                            <strong>
+                                Tổng cộng
+                            </strong>
+
+                            <strong class="price fs-4">
+
+                                {{ "{:,.0f}".format(total) }}
+                                VNĐ
+
+                            </strong>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-petshop w-100 btn-lg"
+                        >
+
+                            <i class="bi bi-credit-card"></i>
+
+                            Tiến hành đặt hàng
+
+                        </button>
+
+
+                        <a
+                            href="{{ url_for('product.index') }}"
+                            class="btn btn-outline-dark w-100 mt-2"
+                        >
+
+                            Tiếp tục mua sắm
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    <!-- ================================================= -->
+    <!-- CART EMPTY -->
+    <!-- ================================================= -->
+
+    {% else %}
+
+        <div class="text-center py-5">
+
+            <div
+                class="mb-3"
+                style="font-size: 80px;"
+            >
+                🛒
+            </div>
+
+
+            <h3 class="fw-bold">
+                Giỏ hàng đang trống
+            </h3>
+
+
+            <p class="text-muted mb-4">
+
+                Hãy thêm sản phẩm yêu thích
+                vào giỏ hàng.
+
+            </p>
+
+
+            <a
+                href="{{ url_for('product.index') }}"
+                class="btn btn-petshop"
+            >
+
+                <i class="bi bi-shop"></i>
+
+                Tiếp tục mua sắm
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -56,9 +56,37 @@ def create_app():
     from app.routes.home import home_bp
     from app.routes.product import product_bp
     from app.routes.auth import auth_bp
+    from app.routes.cart import cart_bp
 
     app.register_blueprint(home_bp)
     app.register_blueprint(product_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(cart_bp)
+
+
+    @app.context_processor
+    def inject_cart_count():
+
+        from flask_login import current_user
+
+        count = 0
+
+        if current_user.is_authenticated:
+
+            from app.models import Cart
+
+            cart = Cart.query.filter_by(
+                user_id=current_user.id
+            ).first()
+
+            if cart:
+                count = sum(
+                    item.quantity
+                    for item in cart.items
+                )
+
+        return {
+            "cart_count": count
+        }
 
     return app
