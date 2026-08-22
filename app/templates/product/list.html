@@ -340,7 +340,10 @@ Sản phẩm - PetShop
                         <div class="d-grid gap-2 mt-3">
 
                             <a
-                                href="#"
+                                href="{{ url_for(
+                                    'product.detail',
+                                    product_id=product.id
+                                ) }}"
                                 class="btn btn-outline-dark"
                             >
                                 <i class="bi bi-eye"></i>

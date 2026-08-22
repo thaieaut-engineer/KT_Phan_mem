@@ -143,3 +143,23 @@ def index():
         selected_category=category_id,
         selected_sort=sort
     )
+
+@product_bp.route("/<int:product_id>")
+def detail(product_id):
+
+    product = Product.query.filter_by(
+        id=product_id,
+        status="active"
+    ).first_or_404()
+
+    related_products = Product.query.filter(
+        Product.category_id == product.category_id,
+        Product.id != product.id,
+        Product.status == "active"
+    ).limit(4).all()
+
+    return render_template(
+        "product/detail.html",
+        product=product,
+        related_products=related_products
+    )
