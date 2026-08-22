@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tài khoản - PetShop
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <div class="text-center mb-4">
+
+                        <div class="profile-avatar">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <h2 class="fw-bold mt-3">
+                            {{ user.full_name }}
+                        </h2>
+
+                        {% if user.role == "admin" %}
+
+                        <span class="badge bg-danger">
+                            Quản trị viên
+                        </span>
+
+                        {% else %}
+
+                        <span class="badge bg-success">
+                            Khách hàng
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <div class="profile-info">
+
+                        <div class="profile-row">
+
+                            <span>
+                                <i class="bi bi-person"></i>
+                                Họ và tên
+                            </span>
+
+                            <strong>
+                                {{ user.full_name }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span>
+                                <i class="bi bi-envelope"></i>
+                                Email
+                            </span>
+
+                            <strong>
+                                {{ user.email }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span>
+                                <i class="bi bi-telephone"></i>
+                                Số điện thoại
+                            </span>
+
+                            <strong>
+
+                                {{ user.phone
+                                   if user.phone
+                                   else "Chưa cập nhật" }}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span>
+                                <i class="bi bi-shield-check"></i>
+                                Trạng thái
+                            </span>
+
+                            {% if user.status == "active" %}
+
+                            <strong class="text-success">
+                                Đang hoạt động
+                            </strong>
+
+                            {% else %}
+
+                            <strong class="text-danger">
+                                Đã khóa
+                            </strong>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span>
+                                <i class="bi bi-calendar"></i>
+                                Ngày đăng ký
+                            </span>
+
+                            <strong>
+
+                                {{ user.created_at.strftime(
+                                    "%d/%m/%Y"
+                                ) if user.created_at else "" }}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <div class="d-flex gap-2 justify-content-center">
+
+                        <a
+                            href="{{ url_for('home.index') }}"
+                            class="btn btn-outline-dark"
+                        >
+                            <i class="bi bi-house"></i>
+                            Trang chủ
+                        </a>
+
+                        <a
+                            href="{{ url_for('auth.logout') }}"
+                            class="btn btn-petshop"
+                        >
+                            <i class="bi bi-box-arrow-right"></i>
+                            Đăng xuất
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

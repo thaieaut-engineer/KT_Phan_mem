@@ -148,6 +148,88 @@
                             </span>
                         </a>
 
+                        <div class="header-actions">
+
+    {% if current_user.is_authenticated %}
+
+        <!-- USER -->
+
+        <a
+            href="{{ url_for('auth.profile') }}"
+            class="header-link"
+            title="Tài khoản"
+        >
+
+            <i class="bi bi-person-circle"></i>
+
+            {{ current_user.full_name }}
+
+        </a>
+
+
+        <!-- CART -->
+
+        <a
+            href="#"
+            class="header-link cart-link"
+            title="Giỏ hàng"
+        >
+
+            <i class="bi bi-cart3"></i>
+
+            <span class="cart-badge">
+                0
+            </span>
+
+        </a>
+
+
+        <!-- LOGOUT -->
+
+        <a
+            href="{{ url_for('auth.logout') }}"
+            class="header-link"
+            title="Đăng xuất"
+        >
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            Đăng xuất
+
+        </a>
+
+
+    {% else %}
+
+        <!-- LOGIN -->
+
+        <a
+            href="{{ url_for('auth.login') }}"
+            class="header-link"
+        >
+
+            <i class="bi bi-person"></i>
+
+            Đăng nhập
+
+        </a>
+
+
+        <!-- REGISTER -->
+
+        <a
+            href="{{ url_for('auth.register') }}"
+            class="header-link"
+        >
+
+            Đăng ký
+
+        </a>
+
+    {% endif %}
+
+</div>
+
                     </div>
 
                 </div>

@@ -26,41 +26,79 @@ Website bán đồ thú cưng được xây dựng bằng Python Flask và MySQL
 ## Cấu trúc project
 
 PetShop/
+
 │
+
 ├── app/
+
 │   ├── __init__.py
+
 │   │
+
 │   ├── models/
+
 │   │   ├── __init__.py
+
 │   │   ├── category.py
+
 │   │   └── product.py
+
 │   │
+
 │   ├── routes/
+
 │   │   ├── __init__.py
+
 │   │   ├── home.py
+
 │   │   └── product.py
+
 │   │
+
 │   ├── templates/
+
 │   │   ├── base.html
+
 │   │   ├── home.html
+
 │   │   └── product/
+
 │   │       └── list.html
+
 │   │
+
 │   └── static/
+
 │       ├── css/
+
 │       │   └── style.css
+
 │       ├── js/
+
 │       │   └── main.js
+
 │       └── images/
+
 │
+
 ├── tests/
+
 │
+
 ├── venv/
+
 │
+
 ├── .env
+
 ├── .env.example
+
 ├── .gitignore
+
 ├── config.py
+
 ├── requirements.txt
+
 ├── README.md
+
 └── run.py
