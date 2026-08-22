@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+{% block title %}
+Đặt hàng - PetShop
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <h1 class="fw-bold mb-4">
+
+        <i class="bi bi-bag-check"></i>
+
+        Xác nhận đặt hàng
+
+    </h1>
+
+
+    {% with messages = get_flashed_messages(
+        with_categories=true
+    ) %}
+
+        {% for category, message in messages %}
+
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+
+    <form method="POST">
+
+        <div class="row g-4">
+
+
+            <!-- ========================================= -->
+            <!-- SHIPPING INFORMATION -->
+            <!-- ========================================= -->
+
+            <div class="col-lg-7">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body p-4">
+
+                        <h4 class="fw-bold mb-4">
+
+                            Thông tin nhận hàng
+
+                        </h4>
+
+
+                        {% if addresses %}
+
+    {% for address in addresses %}
+
+        <div class="form-check border rounded p-3 mb-3">
+
+            <input
+                class="form-check-input"
+                type="radio"
+                name="address_id"
+                value="{{ address.id }}"
+                id="address{{ address.id }}"
+                {% if address.is_default %}
+                    checked
+                {% elif loop.first and not addresses|selectattr('is_default')|list %}
+                    checked
+                {% endif %}
+            >
+
+            <label
+                class="form-check-label ms-2"
+                for="address{{ address.id }}"
+            >
+
+                <strong>
+                    {{ address.receiver_name }}
+                </strong>
+
+                {% if address.is_default %}
+
+                    <span class="badge bg-success ms-2">
+                        Mặc định
+                    </span>
+
+                {% endif %}
+
+                <br>
+
+                <span class="text-muted">
+
+                    {{ address.phone }}
+
+                    <br>
+
+                    {{ address.address }}
+
+                </span>
+
+            </label>
+
+        </div>
+
+    {% endfor %}
+
+
+    <!-- THÊM ĐỊA CHỈ -->
+
+    <a
+        href="{{ url_for('address.add') }}"
+        class="btn btn-outline-dark mb-3"
+    >
+
+        <i class="bi bi-plus-circle"></i>
+
+        Thêm địa chỉ mới
+
+    </a>
+
+
+{% else %}
+
+    <div class="alert alert-warning">
+
+        Bạn chưa có địa chỉ nhận hàng.
+
+    </div>
+
+
+    <a
+        href="{{ url_for('address.add') }}"
+        class="btn btn-outline-dark mb-3"
+    >
+
+        <i class="bi bi-plus-circle"></i>
+
+        Thêm địa chỉ
+
+    </a>
+
+{% endif %}
+
+
+                        <!-- PAYMENT -->
+
+                        <h4 class="fw-bold mt-4 mb-3">
+
+                            Phương thức thanh toán
+
+                        </h4>
+
+
+                        <div class="form-check mb-3">
+
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="payment_method"
+                                value="cod"
+                                id="paymentCod"
+                                checked
+                            >
+
+                            <label
+                                class="form-check-label"
+                                for="paymentCod"
+                            >
+
+                                <strong>
+                                    Thanh toán khi nhận hàng
+                                </strong>
+
+                                <br>
+
+                                <small class="text-muted">
+                                    COD
+                                </small>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="form-check mb-4">
+
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="payment_method"
+                                value="banking"
+                                id="paymentBanking"
+                            >
+
+                            <label
+                                class="form-check-label"
+                                for="paymentBanking"
+                            >
+
+                                <strong>
+                                    Chuyển khoản ngân hàng
+                                </strong>
+
+                            </label>
+
+                        </div>
+
+
+                        <!-- NOTE -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+
+                                Ghi chú đơn hàng
+
+                            </label>
+
+                            <textarea
+                                name="note"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Ghi chú cho người bán..."
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- ORDER SUMMARY -->
+            <!-- ========================================= -->
+
+            <div class="col-lg-5">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body p-4">
+
+                        <h4 class="fw-bold mb-4">
+
+                            Đơn hàng của bạn
+
+                        </h4>
+
+
+                        {% for item in cart.items %}
+
+                            {% if item.product.sale_price is not none %}
+
+                                {% set price = item.product.sale_price %}
+
+                            {% else %}
+
+                                {% set price = item.product.price %}
+
+                            {% endif %}
+
+
+                            <div class="d-flex justify-content-between mb-3">
+
+                                <div>
+
+                                    <strong>
+                                        {{ item.product.name }}
+                                    </strong>
+
+                                    <br>
+
+                                    <small class="text-muted">
+
+                                        {{ item.quantity }}
+                                        ×
+                                        {{ "{:,.0f}".format(price) }}
+                                        VNĐ
+
+                                    </small>
+
+                                </div>
+
+
+                                <strong>
+
+                                    {{ "{:,.0f}".format(
+                                        price * item.quantity
+                                    ) }}
+
+                                    VNĐ
+
+                                </strong>
+
+                            </div>
+
+                        {% endfor %}
+
+
+                        <hr>
+
+
+                        <div class="d-flex justify-content-between mb-2">
+
+                            <span>
+                                Tạm tính
+                            </span>
+
+                            <strong>
+
+                                {{ "{:,.0f}".format(total) }}
+
+                                VNĐ
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <span>
+                                Phí vận chuyển
+                            </span>
+
+                            <strong class="text-success">
+
+                                Miễn phí
+
+                            </strong>
+
+                        </div>
+
+
+                        <hr>
+
+
+                        <div class="d-flex justify-content-between mb-4">
+
+                            <strong>
+                                Tổng cộng
+                            </strong>
+
+                            <strong class="price fs-4">
+
+                                {{ "{:,.0f}".format(
+                                    total + shipping_fee
+                                ) }}
+
+                                VNĐ
+
+                            </strong>
+
+                        </div>
+
+
+                        {% if addresses %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-petshop btn-lg w-100"
+                            >
+
+                                <i class="bi bi-check-circle"></i>
+
+                                Đặt hàng
+
+                            </button>
+
+                        {% endif %}
+
+
+                        <a
+                            href="{{ url_for('cart.index') }}"
+                            class="btn btn-outline-dark w-100 mt-2"
+                        >
+
+                            Quay lại giỏ hàng
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

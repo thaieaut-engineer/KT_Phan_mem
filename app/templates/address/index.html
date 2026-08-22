@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}
+Địa chỉ nhận hàng - PetShop
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h1 class="fw-bold mb-0">
+
+            <i class="bi bi-geo-alt"></i>
+
+            Địa chỉ nhận hàng
+
+        </h1>
+
+
+        <a
+            href="{{ url_for('address.add') }}"
+            class="btn btn-petshop"
+        >
+
+            <i class="bi bi-plus-circle"></i>
+
+            Thêm địa chỉ
+
+        </a>
+
+    </div>
+
+
+    {% with messages = get_flashed_messages(
+        with_categories=true
+    ) %}
+
+        {% for category, message in messages %}
+
+            <div class="alert alert-{{ category }}">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+
+    {% if addresses %}
+
+        <div class="row g-3">
+
+            {% for item in addresses %}
+
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm h-100">
+
+                        <div class="card-body p-4">
+
+
+                            <div class="d-flex justify-content-between">
+
+                                <div>
+
+                                    <h5 class="fw-bold mb-1">
+
+                                        {{ item.receiver_name }}
+
+                                    </h5>
+
+
+                                    {% if item.is_default %}
+
+                                        <span class="badge bg-success">
+
+                                            Mặc định
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <i
+                                    class="bi bi-geo-alt-fill"
+                                    style="font-size: 25px;"
+                                ></i>
+
+                            </div>
+
+
+                            <hr>
+
+
+                            <p class="mb-2">
+
+                                <strong>
+                                    Số điện thoại:
+                                </strong>
+
+                                {{ item.phone }}
+
+                            </p>
+
+
+                            <p class="mb-3">
+
+                                <strong>
+                                    Địa chỉ:
+                                </strong>
+
+                                {{ item.address }}
+
+                            </p>
+
+
+                            {% if not item.is_default %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'address.set_default',
+                                        address_id=item.id
+                                    ) }}"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-dark btn-sm"
+                                    >
+
+                                        Đặt làm mặc định
+
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="text-center py-5">
+
+            <i
+                class="bi bi-geo-alt"
+                style="font-size: 70px;"
+            ></i>
+
+
+            <h3 class="fw-bold mt-3">
+
+                Chưa có địa chỉ
+
+            </h3>
+
+
+            <p class="text-muted">
+
+                Hãy thêm địa chỉ nhận hàng của bạn.
+
+            </p>
+
+
+            <a
+    href="{{ url_for('address.add') }}"
+    class="btn btn-petshop"
+>
+    <i class="bi bi-plus-circle"></i>
+    Thêm địa chỉ
+</a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

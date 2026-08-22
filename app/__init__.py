@@ -32,7 +32,12 @@ def create_app():
     from app.models import (
         User,
         Category,
-        Product
+        Product,
+        Cart,
+        CartItem,
+        Address,
+        Order,
+        OrderItem
     )
 
 
@@ -57,11 +62,15 @@ def create_app():
     from app.routes.product import product_bp
     from app.routes.auth import auth_bp
     from app.routes.cart import cart_bp
+    from app.routes.order import order_bp
+    from app.routes.address import address_bp
 
     app.register_blueprint(home_bp)
     app.register_blueprint(product_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(cart_bp)
+    app.register_blueprint(order_bp)
+    app.register_blueprint(address_bp)
 
 
     @app.context_processor
