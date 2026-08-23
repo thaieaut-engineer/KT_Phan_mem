@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+{% if product %}
+    {% set page_title = "Sửa sản phẩm" %}
+{% else %}
+    {% set page_title = "Thêm sản phẩm" %}
+{% endif %}
+
+
+{% block title %}
+{{ page_title }} - PetShop
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h1 class="fw-bold">
+
+            <i class="bi bi-box-seam"></i>
+
+            {{ page_title }}
+
+        </h1>
+
+
+        <a
+            href="{{ url_for('admin.products') }}"
+            class="btn btn-outline-dark"
+        >
+
+            <i class="bi bi-arrow-left"></i>
+
+            Quay lại
+
+        </a>
+
+    </div>
+
+
+    {% with messages = get_flashed_messages(
+        with_categories=true
+    ) %}
+
+        {% for category, message in messages %}
+
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                <div class="row g-4">
+
+
+                    <!-- TÊN -->
+
+                    <div class="col-md-8">
+
+                        <label class="form-label fw-bold">
+
+                            Tên sản phẩm
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            maxlength="200"
+                            value="{{ product.name if product else '' }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- DANH MỤC -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-bold">
+
+                            Danh mục
+
+                        </label>
+
+                        <select
+                            name="category_id"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                -- Chọn danh mục --
+                            </option>
+
+                            {% for category in categories %}
+
+                                <option
+                                    value="{{ category.id }}"
+                                    {% if product and product.category_id == category.id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ category.name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- MÔ TẢ -->
+
+                    <div class="col-12">
+
+                        <label class="form-label fw-bold">
+
+                            Mô tả
+
+                        </label>
+
+                        <textarea
+                            name="description"
+                            class="form-control"
+                            rows="5"
+                        >{{ product.description if product else '' }}</textarea>
+
+                    </div>
+
+
+                    <!-- GIÁ -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-bold">
+
+                            Giá gốc
+
+                        </label>
+
+                        <input
+                            type="number"
+                            name="price"
+                            class="form-control"
+                            min="0"
+                            step="1000"
+                            value="{{ product.price if product else '' }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- GIÁ KM -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-bold">
+
+                            Giá khuyến mãi
+
+                        </label>
+
+                        <input
+                            type="number"
+                            name="sale_price"
+                            class="form-control"
+                            min="0"
+                            step="1000"
+                            value="{{ product.sale_price if product and product.sale_price else '' }}"
+                        >
+
+                        <small class="text-muted">
+
+                            Để trống nếu không giảm giá.
+
+                        </small>
+
+                    </div>
+
+
+                    <!-- STOCK -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-bold">
+
+                            Tồn kho
+
+                        </label>
+
+                        <input
+                            type="number"
+                            name="stock"
+                            class="form-control"
+                            min="0"
+                            value="{{ product.stock if product else 0 }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- IMAGE -->
+
+                    <div class="col-md-8">
+
+                        <label class="form-label fw-bold">
+
+                            Hình ảnh
+
+                        </label>
+
+                        <input
+                            type="file"
+                            name="image"
+                            class="form-control"
+                            accept=".png,.jpg,.jpeg,.webp"
+                        >
+
+                        <small class="text-muted">
+
+                            PNG, JPG, JPEG hoặc WEBP.
+
+                        </small>
+
+
+                        {% if product and product.image %}
+
+                            <div class="mt-3">
+
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        filename='uploads/products/' ~ product.image
+                                    ) }}"
+                                    style="
+                                        width:120px;
+                                        height:120px;
+                                        object-fit:cover;
+                                        border-radius:10px;
+                                    "
+                                >
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-bold">
+
+                            Trạng thái
+
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option
+                                value="active"
+                                {% if not product or product.status == "active" %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                Đang bán
+
+                            </option>
+
+                            <option
+                                value="inactive"
+                                {% if product and product.status == "inactive" %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                Ẩn sản phẩm
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+
+                    <div class="col-12">
+
+                        <hr>
+
+                        <button
+                            type="submit"
+                            class="btn btn-petshop btn-lg"
+                        >
+
+                            {% if product %}
+
+                                <i class="bi bi-save"></i>
+
+                                Cập nhật sản phẩm
+
+                            {% else %}
+
+                                <i class="bi bi-plus-circle"></i>
+
+                                Thêm sản phẩm
+
+                            {% endif %}
+
+                        </button>
+
+
+                        <a
+                            href="{{ url_for('admin.products') }}"
+                            class="btn btn-outline-dark btn-lg"
+                        >
+
+                            Hủy
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

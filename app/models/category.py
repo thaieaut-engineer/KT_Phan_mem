@@ -11,8 +11,7 @@ class Category(db.Model):
 
     products = db.relationship(
         "Product",
-        backref="category",
-        lazy=True
+        back_populates="category"
     )
 
     def __repr__(self):

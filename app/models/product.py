@@ -54,5 +54,9 @@ class Product(db.Model):
         onupdate=db.func.now()
     )
 
+    category = db.relationship(
+        "Category",
+        back_populates="products"
+    )
     def __repr__(self):
         return f"<Product {self.name}>"
