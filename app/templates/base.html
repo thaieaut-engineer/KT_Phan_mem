@@ -127,44 +127,86 @@
                             <i class="bi bi-search"></i>
                         </a>
 
-                        <!-- User -->
-                        <a href="#"
-                           class="text-dark fs-5"
-                           title="Tài khoản">
-                            <i class="bi bi-person"></i>
-                        </a>
-
-                        <!-- Cart -->
-                        <a href="#"
-                           class="text-dark fs-5 position-relative"
-                           title="Giỏ hàng">
-
-                            <i class="bi bi-cart3"></i>
-
-                            <span
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                            >
-                                0
-                            </span>
-                        </a>
-
                         <div class="header-actions">
 
     {% if current_user.is_authenticated %}
 
         <!-- USER -->
 
+        {% if current_user.is_authenticated %}
+
+<div class="user-dropdown">
+
+    <div class="user-dropdown-toggle">
+
+        <i class="bi bi-person-circle"></i>
+
+        <span>
+            {{ current_user.full_name or current_user.username }}
+        </span>
+
+        <i class="bi bi-chevron-down user-chevron"></i>
+
+    </div>
+
+
+    <div class="user-dropdown-menu">
+
         <a
             href="{{ url_for('auth.profile') }}"
-            class="header-link"
-            title="Tài khoản"
+            class="user-menu-item"
         >
 
-            <i class="bi bi-person-circle"></i>
+            <i class="bi bi-person"></i>
 
-            {{ current_user.full_name }}
+            <span>Tài khoản</span>
 
         </a>
+
+
+        <a
+            href="{{ url_for('order.history') }}"
+            class="user-menu-item"
+        >
+
+            <i class="bi bi-receipt"></i>
+
+            <span>Đơn hàng của tôi</span>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('address.index') }}"
+            class="user-menu-item"
+        >
+
+            <i class="bi bi-geo-alt"></i>
+
+            <span>Địa chỉ nhận hàng</span>
+
+        </a>
+
+
+        <div class="user-menu-divider"></div>
+
+
+        <a
+            href="{{ url_for('auth.logout') }}"
+            class="user-menu-item logout-item"
+        >
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            <span>Đăng xuất</span>
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
 
 
         <!-- CART -->

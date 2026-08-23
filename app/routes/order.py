@@ -305,3 +305,41 @@ def success(order_id):
         "order/success.html",
         order=order
     )
+
+# =========================================================
+# LỊCH SỬ ĐƠN HÀNG
+# =========================================================
+
+@order_bp.route("/lich-su")
+@login_required
+def history():
+
+    orders = Order.query.filter_by(
+        user_id=current_user.id
+    ).order_by(
+        Order.created_at.desc()
+    ).all()
+
+    return render_template(
+        "order/history.html",
+        orders=orders
+    )
+
+
+# =========================================================
+# CHI TIẾT ĐƠN HÀNG
+# =========================================================
+
+@order_bp.route("/<int:order_id>")
+@login_required
+def detail(order_id):
+
+    order = Order.query.filter_by(
+        id=order_id,
+        user_id=current_user.id
+    ).first_or_404()
+
+    return render_template(
+        "order/detail.html",
+        order=order
+    )

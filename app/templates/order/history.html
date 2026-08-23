@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}
+Đơn hàng của tôi - PetShop
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <h1 class="fw-bold mb-4">
+
+        <i class="bi bi-receipt"></i>
+
+        Đơn hàng của tôi
+
+    </h1>
+
+
+    {% if orders %}
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle mb-0">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Mã đơn
+                            </th>
+
+                            <th>
+                                Ngày đặt
+                            </th>
+
+                            <th>
+                                Tổng tiền
+                            </th>
+
+                            <th>
+                                Thanh toán
+                            </th>
+
+                            <th>
+                                Trạng thái
+                            </th>
+
+                            <th class="text-end">
+                                Thao tác
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for order in orders %}
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        #{{ order.id }}
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ order.created_at.strftime(
+                                        "%d/%m/%Y %H:%M"
+                                    ) }}
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong class="text-danger">
+
+                                        {{ "{:,.0f}".format(
+                                            order.total_amount
+                                        ) }}
+
+                                        VNĐ
+
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if order.payment_status == "paid" %}
+
+                                        <span class="badge bg-success">
+                                            Đã thanh toán
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-warning text-dark">
+                                            Chưa thanh toán
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if order.order_status == "pending" %}
+
+                                        <span class="badge bg-secondary">
+                                            Chờ xác nhận
+                                        </span>
+
+                                    {% elif order.order_status == "confirmed" %}
+
+                                        <span class="badge bg-primary">
+                                            Đã xác nhận
+                                        </span>
+
+                                    {% elif order.order_status == "shipping" %}
+
+                                        <span class="badge bg-info text-dark">
+                                            Đang giao
+                                        </span>
+
+                                    {% elif order.order_status == "completed" %}
+
+                                        <span class="badge bg-success">
+                                            Hoàn thành
+                                        </span>
+
+                                    {% elif order.order_status == "cancelled" %}
+
+                                        <span class="badge bg-danger">
+                                            Đã hủy
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-secondary">
+                                            {{ order.order_status }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td class="text-end">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'order.detail',
+                                            order_id=order.id
+                                        ) }}"
+                                        class="btn btn-outline-dark btn-sm"
+                                    >
+
+                                        <i class="bi bi-eye"></i>
+
+                                        Xem
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    {% else %}
+
+        <div class="text-center py-5">
+
+            <i
+                class="bi bi-receipt"
+                style="font-size: 70px;"
+            ></i>
+
+
+            <h3 class="fw-bold mt-3">
+
+                Bạn chưa có đơn hàng
+
+            </h3>
+
+
+            <p class="text-muted">
+
+                Hãy mua sắm và đặt hàng tại PetShop.
+
+            </p>
+
+
+            <a
+                href="{{ url_for('product.index') }}"
+                class="btn btn-petshop"
+            >
+
+                <i class="bi bi-shop"></i>
+
+                Bắt đầu mua sắm
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

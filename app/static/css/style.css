@@ -480,3 +480,179 @@ footer {
 .cart-image span {
     font-size: 35px;
 }
+
+/* ========================================
+   USER DROPDOWN
+======================================== */
+
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+
+/* USER NAME */
+
+.user-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 8px 10px;
+
+    cursor: pointer;
+
+    border-radius: 8px;
+
+    transition: background 0.2s ease;
+}
+
+
+.user-dropdown-toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+
+.user-dropdown-toggle i:first-child {
+    font-size: 20px;
+}
+
+
+.user-chevron {
+    font-size: 12px;
+
+    transition: transform 0.2s ease;
+}
+
+
+/* MENU */
+
+.user-dropdown-menu {
+    position: absolute;
+
+    top: calc(100% + 8px);
+
+    right: 0;
+
+    width: 220px;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.12);
+
+    padding: 8px;
+
+    z-index: 9999;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(-8px);
+
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* HOVER */
+
+.user-dropdown:hover .user-dropdown-menu {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+
+}
+
+
+.user-dropdown:hover .user-chevron {
+
+    transform: rotate(180deg);
+
+}
+
+
+/* ITEM */
+
+.user-menu-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border-radius: 8px;
+
+    color: #333;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.user-menu-item:hover {
+
+    background: #f5f5f5;
+
+    color: inherit;
+
+}
+
+
+.user-menu-item i {
+
+    width: 20px;
+
+    text-align: center;
+
+    font-size: 17px;
+
+}
+
+
+/* DIVIDER */
+
+.user-menu-divider {
+
+    height: 1px;
+
+    background: #eeeeee;
+
+    margin: 6px 4px;
+}
+
+
+/* LOGOUT */
+
+.user-menu-item.logout-item {
+
+    color: #dc3545;
+
+}
+
+
+.user-menu-item.logout-item:hover {
+
+    background: #fff1f1;
+
+    color: #dc3545;
+
+}

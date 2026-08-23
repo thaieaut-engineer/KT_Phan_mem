@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+
+{% block title %}
+Chi tiết đơn hàng #{{ order.id }} - PetShop
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h1 class="fw-bold mb-0">
+
+            Chi tiết đơn hàng #{{ order.id }}
+
+        </h1>
+
+
+        <a
+            href="{{ url_for('order.history') }}"
+            class="btn btn-outline-dark"
+        >
+
+            <i class="bi bi-arrow-left"></i>
+
+            Quay lại
+
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+
+        <!-- ========================================= -->
+        <!-- ORDER INFORMATION -->
+        <!-- ========================================= -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">
+                        Sản phẩm
+                    </h4>
+
+
+                    {% for item in order.items %}
+
+                        <div class="d-flex justify-content-between align-items-center border-bottom py-3">
+
+                            <div>
+
+                                <strong>
+                                    {{ item.product_name }}
+                                </strong>
+
+                                <div class="text-muted">
+
+                                    {{ item.quantity }}
+                                    ×
+                                    {{ "{:,.0f}".format(item.price) }}
+                                    VNĐ
+
+                                </div>
+
+                            </div>
+
+
+                            <strong>
+
+                                {{ "{:,.0f}".format(item.subtotal) }}
+
+                                VNĐ
+
+                            </strong>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <!-- NOTE -->
+
+            {% if order.note %}
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body p-4">
+
+                        <h5 class="fw-bold">
+                            Ghi chú
+                        </h5>
+
+                        <p class="mb-0 text-muted">
+
+                            {{ order.note }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- ORDER SUMMARY -->
+        <!-- ========================================= -->
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">
+                        Thông tin đơn hàng
+                    </h4>
+
+
+                    <p>
+
+                        <strong>
+                            Mã đơn:
+                        </strong>
+
+                        #{{ order.id }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Phương thức:
+                        </strong>
+
+                        {% if order.payment_method == "cod" %}
+
+                            COD
+
+                        {% else %}
+
+                            Chuyển khoản
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Thanh toán:
+                        </strong>
+
+                        {% if order.payment_status == "paid" %}
+
+                            <span class="text-success">
+                                Đã thanh toán
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-warning">
+                                Chưa thanh toán
+                            </span>
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Trạng thái:
+                        </strong>
+
+                        {{ order.order_status }}
+
+                    </p>
+
+
+                    <hr>
+
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>
+                            Phí vận chuyển
+                        </span>
+
+                        <span>
+                            {{ "{:,.0f}".format(
+                                order.shipping_fee or 0
+                            ) }}
+                            VNĐ
+                        </span>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mt-3">
+
+                        <strong>
+                            Tổng cộng
+                        </strong>
+
+                        <strong class="text-danger fs-5">
+
+                            {{ "{:,.0f}".format(
+                                order.total_amount
+                            ) }}
+
+                            VNĐ
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADDRESS -->
+
+            {% if order.address %}
+
+                <div class="card border-0 shadow-sm mt-4">
+
+                    <div class="card-body p-4">
+
+                        <h5 class="fw-bold mb-3">
+
+                            <i class="bi bi-geo-alt"></i>
+
+                            Địa chỉ nhận hàng
+
+                        </h5>
+
+
+                        <strong>
+
+                            {{ order.address.receiver_name }}
+
+                        </strong>
+
+
+                        <p class="text-muted mb-0">
+
+                            {{ order.address.phone }}
+
+                            <br>
+
+                            {{ order.address.address }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
