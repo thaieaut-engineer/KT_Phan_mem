@@ -64,6 +64,7 @@ def create_app():
     from app.routes.cart import cart_bp
     from app.routes.order import order_bp
     from app.routes.address import address_bp
+    from app.routes.admin import admin_bp
 
     app.register_blueprint(home_bp)
     app.register_blueprint(product_bp)
@@ -71,6 +72,7 @@ def create_app():
     app.register_blueprint(cart_bp)
     app.register_blueprint(order_bp)
     app.register_blueprint(address_bp)
+    app.register_blueprint(admin_bp)
 
 
     @app.context_processor

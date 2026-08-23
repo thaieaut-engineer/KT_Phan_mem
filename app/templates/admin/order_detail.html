@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block title %}
+Đơn hàng #{{ order.id }} - Admin
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h1 class="fw-bold">
+            Đơn hàng #{{ order.id }}
+        </h1>
+
+        <a
+            href="{{ url_for('admin.orders') }}"
+            class="btn btn-outline-dark"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Danh sách đơn
+        </a>
+
+    </div>
+
+
+    {% with messages = get_flashed_messages(
+        with_categories=true
+    ) %}
+
+        {% for category, message in messages %}
+
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+
+    <div class="row g-4">
+
+
+        <!-- SẢN PHẨM -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">
+                        Sản phẩm
+                    </h4>
+
+
+                    {% for item in order.items %}
+
+                        <div class="d-flex justify-content-between border-bottom py-3">
+
+                            <div>
+
+                                <strong>
+                                    {{ item.product_name }}
+                                </strong>
+
+                                <div class="text-muted">
+
+                                    {{ item.quantity }}
+                                    ×
+                                    {{ "{:,.0f}".format(
+                                        item.price
+                                    ) }}
+                                    VNĐ
+
+                                </div>
+
+                            </div>
+
+
+                            <strong>
+
+                                {{ "{:,.0f}".format(
+                                    item.subtotal
+                                ) }}
+
+                                VNĐ
+
+                            </strong>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ĐỊA CHỈ -->
+
+            {% if order.address %}
+
+                <div class="card border-0 shadow-sm mt-4">
+
+                    <div class="card-body p-4">
+
+                        <h4 class="fw-bold mb-3">
+                            Địa chỉ nhận hàng
+                        </h4>
+
+                        <strong>
+                            {{ order.address.receiver_name }}
+                        </strong>
+
+                        <p class="text-muted mb-0">
+
+                            {{ order.address.phone }}
+
+                            <br>
+
+                            {{ order.address.address }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- QUẢN LÝ -->
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">
+                        Quản lý đơn
+                    </h4>
+
+
+                    <p>
+                        <strong>User ID:</strong>
+                        {{ order.user_id }}
+                    </p>
+
+
+                    <p>
+                        <strong>Thanh toán:</strong>
+
+                        {% if order.payment_status == "paid" %}
+                            Đã thanh toán
+                        {% else %}
+                            Chưa thanh toán
+                        {% endif %}
+
+                    </p>
+
+
+                    <p>
+                        <strong>Phương thức:</strong>
+
+                        {% if order.payment_method == "cod" %}
+                            COD
+                        {% else %}
+                            Chuyển khoản
+                        {% endif %}
+
+                    </p>
+
+
+                    <p>
+                        <strong>Trạng thái:</strong>
+                        {{ order.order_status }}
+                    </p>
+
+
+                    <hr>
+
+
+                    <div class="d-flex justify-content-between mb-4">
+
+                        <strong>
+                            Tổng cộng
+                        </strong>
+
+                        <strong class="text-danger">
+
+                            {{ "{:,.0f}".format(
+                                order.total_amount
+                            ) }}
+
+                            VNĐ
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- XÁC NHẬN -->
+
+                    {% if order.order_status == "pending" %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'admin.confirm_order',
+                                order_id=order.id
+                            ) }}"
+                            class="mb-2"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary w-100"
+                            >
+
+                                <i class="bi bi-check-circle"></i>
+
+                                Xác nhận đơn
+
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+
+                    <!-- ĐANG GIAO -->
+
+                    {% if order.order_status == "confirmed" %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'admin.shipping_order',
+                                order_id=order.id
+                            ) }}"
+                            class="mb-2"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn btn-info w-100"
+                            >
+
+                                <i class="bi bi-truck"></i>
+
+                                Chuyển sang đang giao
+
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+
+                    <!-- HOÀN THÀNH -->
+
+                    {% if order.order_status == "shipping" %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'admin.complete_order',
+                                order_id=order.id
+                            ) }}"
+                            class="mb-2"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn btn-success w-100"
+                            >
+
+                                <i class="bi bi-check2-all"></i>
+
+                                Hoàn thành
+
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+
+                    <!-- HỦY -->
+
+                    {% if order.order_status not in [
+                        "completed",
+                        "cancelled"
+                    ] %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'admin.cancel_order',
+                                order_id=order.id
+                            ) }}"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-danger w-100"
+                                onclick="return confirm(
+                                    'Bạn có chắc muốn hủy đơn hàng này?'
+                                );"
+                            >
+
+                                <i class="bi bi-x-circle"></i>
+
+                                Hủy đơn
+
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

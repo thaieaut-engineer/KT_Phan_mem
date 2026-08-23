@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin - PetShop
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <h1 class="fw-bold mb-4">
+        <i class="bi bi-speedometer2"></i>
+        Quản trị PetShop
+    </h1>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">
+                        Tổng đơn hàng
+                    </h6>
+
+                    <h2 class="fw-bold">
+                        {{ total_orders }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">
+                        Chờ xác nhận
+                    </h6>
+
+                    <h2 class="fw-bold text-warning">
+                        {{ pending_orders }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">
+                        Hoàn thành
+                    </h6>
+
+                    <h2 class="fw-bold text-success">
+                        {{ completed_orders }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row g-4 mt-1">
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <span>Đã xác nhận</span>
+                    <h3>{{ confirmed_orders }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <span>Đang giao</span>
+                    <h3>{{ shipping_orders }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <span>Đã hủy</span>
+                    <h3>{{ cancelled_orders }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+
+                    <a
+                        href="{{ url_for('admin.orders') }}"
+                        class="btn btn-petshop w-100"
+                    >
+                        Quản lý đơn hàng
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
