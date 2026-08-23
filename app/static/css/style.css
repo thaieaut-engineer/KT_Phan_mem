@@ -656,3 +656,30 @@ footer {
     color: #dc3545;
 
 }
+
+
+/* =========================
+   ADMIN PAGINATION
+   ========================= */
+
+.pagination .page-link {
+    color: #ff6b35;
+    border-color: #dee2e6;
+}
+
+.pagination .page-link:hover {
+    color: #fff;
+    background-color: #ff6b35;
+    border-color: #ff6b35;
+}
+
+.pagination .page-item.active .page-link {
+    color: #fff;
+    background-color: #ff6b35;
+    border-color: #ff6b35;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    background-color: #fff;
+}

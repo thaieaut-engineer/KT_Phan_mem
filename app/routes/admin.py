@@ -114,13 +114,32 @@ def dashboard():
 @admin_required
 def orders():
 
-    orders = Order.query.order_by(
-        Order.created_at.desc()
-    ).all()
+    page = request.args.get(
+        "page",
+        1,
+        type=int
+    )
+
+    if page < 1:
+        page = 1
+
+    # Số đơn hàng / trang
+    per_page = 10
+
+    pagination = Order.query.order_by(
+        Order.id.desc()
+    ).paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+
+    orders = pagination.items
 
     return render_template(
         "admin/orders.html",
-        orders=orders
+        orders=orders,
+        pagination=pagination
     )
 
 
@@ -362,7 +381,78 @@ def products():
         ""
     ).strip()
 
+    page = request.args.get(
+        "page",
+        1,
+        type=int
+    )
+
+    if page < 1:
+        page = 1
+
+    # Số sản phẩm / trang
+    per_page = 10
+
     query = Product.query
+
+    # =========================
+    # TÌM KIẾM
+    # =========================
+
+    if keyword:
+
+        query = query.filter(
+            Product.name.ilike(
+                f"%{keyword}%"
+            )
+        )
+
+    # =========================
+    # LỌC DANH MỤC
+    # =========================
+
+    if category_id:
+
+        try:
+
+            category_id_int = int(category_id)
+
+            query = query.filter(
+                Product.category_id == category_id_int
+            )
+
+        except ValueError:
+
+            category_id = ""
+
+    # =========================
+    # PHÂN TRANG
+    # =========================
+
+    pagination = query.order_by(
+        Product.id.desc()
+    ).paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+
+    products = pagination.items
+
+    categories = Category.query.filter_by(
+        status=1
+    ).order_by(
+        Category.name.asc()
+    ).all()
+
+    return render_template(
+        "admin/products.html",
+        products=products,
+        categories=categories,
+        keyword=keyword,
+        selected_category=category_id,
+        pagination=pagination
+    )
 
 
     # =========================
@@ -1123,5 +1213,308 @@ def delete_product(product_id):
     return redirect(
         url_for(
             "admin.products"
+        )
+    )
+
+# =========================================================
+# QUẢN LÝ DANH MỤC
+# =========================================================
+
+@admin_bp.route("/categories")
+@admin_required
+def categories():
+
+    keyword = request.args.get(
+        "keyword",
+        ""
+    ).strip()
+
+    page = request.args.get(
+        "page",
+        1,
+        type=int
+    )
+
+    # Không cho page nhỏ hơn 1
+    if page < 1:
+        page = 1
+
+    # Số danh mục trên mỗi trang
+    per_page = 5
+
+    query = Category.query
+
+    # =========================
+    # TÌM KIẾM
+    # =========================
+
+    if keyword:
+
+        query = query.filter(
+            Category.name.ilike(
+                f"%{keyword}%"
+            )
+        )
+
+    # =========================
+    # PHÂN TRANG
+    # =========================
+
+    pagination = query.order_by(
+        Category.id.desc()
+    ).paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+
+    categories = pagination.items
+
+    return render_template(
+        "admin/categories.html",
+        categories=categories,
+        pagination=pagination,
+        keyword=keyword
+    )
+
+
+# =========================================================
+# THÊM DANH MỤC
+# =========================================================
+
+@admin_bp.route(
+    "/categories/add",
+    methods=["GET", "POST"]
+)
+@admin_required
+def add_category():
+
+    if request.method == "POST":
+
+        name = request.form.get(
+            "name",
+            ""
+        ).strip()
+
+        description = request.form.get(
+            "description",
+            ""
+        ).strip()
+
+        if not name:
+
+            flash(
+                "Vui lòng nhập tên danh mục.",
+                "danger"
+            )
+
+            return render_template(
+                "admin/category_form.html",
+                category=None
+            )
+
+        # Kiểm tra trùng tên
+
+        exists = Category.query.filter(
+            db.func.lower(Category.name)
+            == name.lower()
+        ).first()
+
+        if exists:
+
+            flash(
+                "Tên danh mục đã tồn tại.",
+                "danger"
+            )
+
+            return render_template(
+                "admin/category_form.html",
+                category=None
+            )
+
+        category = Category(
+            name=name,
+            description=description,
+            status=1
+        )
+
+        db.session.add(category)
+        db.session.commit()
+
+        flash(
+            "Thêm danh mục thành công.",
+            "success"
+        )
+
+        return redirect(
+            url_for(
+                "admin.categories"
+            )
+        )
+
+    return render_template(
+        "admin/category_form.html",
+        category=None
+    )
+
+
+# =========================================================
+# SỬA DANH MỤC
+# =========================================================
+
+@admin_bp.route(
+    "/categories/<int:category_id>/edit",
+    methods=["GET", "POST"]
+)
+@admin_required
+def edit_category(category_id):
+
+    category = Category.query.filter_by(
+        id=category_id
+    ).first_or_404()
+
+    if request.method == "POST":
+
+        name = request.form.get(
+            "name",
+            ""
+        ).strip()
+
+        description = request.form.get(
+            "description",
+            ""
+        ).strip()
+
+        if not name:
+
+            flash(
+                "Vui lòng nhập tên danh mục.",
+                "danger"
+            )
+
+            return render_template(
+                "admin/category_form.html",
+                category=category
+            )
+
+        # Không cho trùng với danh mục khác
+
+        exists = Category.query.filter(
+            db.func.lower(Category.name)
+            == name.lower(),
+            Category.id != category.id
+        ).first()
+
+        if exists:
+
+            flash(
+                "Tên danh mục đã tồn tại.",
+                "danger"
+            )
+
+            return render_template(
+                "admin/category_form.html",
+                category=category
+            )
+
+        category.name = name
+        category.description = description
+
+        db.session.commit()
+
+        flash(
+            "Cập nhật danh mục thành công.",
+            "success"
+        )
+
+        return redirect(
+            url_for(
+                "admin.categories"
+            )
+        )
+
+    return render_template(
+        "admin/category_form.html",
+        category=category
+    )
+
+
+# =========================================================
+# ẨN / XÓA DANH MỤC
+# =========================================================
+
+@admin_bp.route(
+    "/categories/<int:category_id>/delete",
+    methods=["POST"]
+)
+@admin_required
+def delete_category(category_id):
+
+    category = Category.query.filter_by(
+        id=category_id
+    ).first_or_404()
+
+    # Kiểm tra sản phẩm thuộc danh mục
+
+    product_count = Product.query.filter_by(
+        category_id=category.id
+    ).count()
+
+    if product_count > 0:
+
+        category.status = 0
+
+        db.session.commit()
+
+        flash(
+            "Danh mục đang có sản phẩm nên đã được chuyển sang trạng thái ẩn.",
+            "warning"
+        )
+
+    else:
+
+        db.session.delete(category)
+
+        db.session.commit()
+
+        flash(
+            "Đã xóa danh mục.",
+            "success"
+        )
+
+    return redirect(
+        url_for(
+            "admin.categories"
+        )
+    )
+
+
+# =========================================================
+# KÍCH HOẠT / ẨN DANH MỤC
+# =========================================================
+
+@admin_bp.route(
+    "/categories/<int:category_id>/toggle",
+    methods=["POST"]
+)
+@admin_required
+def toggle_category(category_id):
+
+    category = Category.query.filter_by(
+        id=category_id
+    ).first_or_404()
+
+    category.status = 0 if category.status == 1 else 1
+
+    db.session.commit()
+
+    flash(
+        "Đã cập nhật trạng thái danh mục.",
+        "success"
+    )
+
+    return redirect(
+        url_for(
+            "admin.categories"
         )
     )

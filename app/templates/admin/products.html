@@ -391,6 +391,182 @@ Quản lý sản phẩm - PetShop
 
         </div>
 
+
+        <!-- PHÂN TRANG -->
+
+        {% if pagination.pages > 1 %}
+
+            <div class="card-footer bg-white border-0 py-3">
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                    <!-- THÔNG TIN -->
+
+                    <div class="text-muted small">
+
+                        Hiển thị
+
+                        <strong>
+                            {{ pagination.first }}
+                        </strong>
+
+                        -
+
+                        <strong>
+                            {{ pagination.last }}
+                        </strong>
+
+                        trong tổng số
+
+                        <strong>
+                            {{ pagination.total }}
+                        </strong>
+
+                        sản phẩm
+
+                    </div>
+
+
+                    <!-- PAGINATION -->
+
+                    <nav aria-label="Phân trang sản phẩm">
+
+                        <ul class="pagination mb-0">
+
+                            <!-- TRANG TRƯỚC -->
+
+                            <li
+                                class="page-item
+                                {% if not pagination.has_prev %}
+                                    disabled
+                                {% endif %}"
+                            >
+
+                                {% if pagination.has_prev %}
+
+                                    <a
+                                        class="page-link"
+                                        href="{{ url_for(
+                                            'admin.products',
+                                            page=pagination.prev_num,
+                                            keyword=keyword,
+                                            category_id=selected_category
+                                        ) }}"
+                                    >
+
+                                        <i class="bi bi-chevron-left"></i>
+
+                                    </a>
+
+                                {% else %}
+
+                                    <span class="page-link">
+
+                                        <i class="bi bi-chevron-left"></i>
+
+                                    </span>
+
+                                {% endif %}
+
+                            </li>
+
+
+                            <!-- SỐ TRANG -->
+
+                            {% for page_num in pagination.iter_pages(
+                                left_edge=1,
+                                right_edge=1,
+                                left_current=2,
+                                right_current=2
+                            ) %}
+
+                                {% if page_num %}
+
+                                    <li
+                                        class="page-item
+                                        {% if page_num == pagination.page %}
+                                            active
+                                        {% endif %}"
+                                    >
+
+                                        <a
+                                            class="page-link"
+                                            href="{{ url_for(
+                                                'admin.products',
+                                                page=page_num,
+                                                keyword=keyword,
+                                                category_id=selected_category
+                                            ) }}"
+                                        >
+
+                                            {{ page_num }}
+
+                                        </a>
+
+                                    </li>
+
+                                {% else %}
+
+                                    <li class="page-item disabled">
+
+                                        <span class="page-link">
+                                            ...
+                                        </span>
+
+                                    </li>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+
+                            <!-- TRANG SAU -->
+
+                            <li
+                                class="page-item
+                                {% if not pagination.has_next %}
+                                    disabled
+                                {% endif %}"
+                            >
+
+                                {% if pagination.has_next %}
+
+                                    <a
+                                        class="page-link"
+                                        href="{{ url_for(
+                                            'admin.products',
+                                            page=pagination.next_num,
+                                            keyword=keyword,
+                                            category_id=selected_category
+                                        ) }}"
+                                    >
+
+                                        <i class="bi bi-chevron-right"></i>
+
+                                    </a>
+
+                                {% else %}
+
+                                    <span class="page-link">
+
+                                        <i class="bi bi-chevron-right"></i>
+
+                                    </span>
+
+                                {% endif %}
+
+                            </li>
+
+                        </ul>
+
+                    </nav>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
     </div>
 
 </div>
