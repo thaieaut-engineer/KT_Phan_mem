@@ -208,6 +208,100 @@
 
 {% endif %}
 
+{% if current_user.is_authenticated and current_user.role == 'admin' %}
+
+<li class="nav-item dropdown">
+
+    <a
+        class="nav-link dropdown-toggle fw-semibold"
+        href="#"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+    >
+
+        <i class="bi bi-speedometer2"></i>
+
+        Quản trị
+
+    </a>
+
+
+    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+
+        <li>
+
+            <a
+                class="dropdown-item"
+                href="{{ url_for('admin.dashboard') }}"
+            >
+
+                <i class="bi bi-speedometer2 me-2"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+
+        <li>
+
+            <a
+                class="dropdown-item"
+                href="{{ url_for('admin.orders') }}"
+            >
+
+                <i class="bi bi-receipt me-2"></i>
+
+                Quản lý đơn hàng
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                class="dropdown-item"
+                href="{{ url_for('admin.products') }}"
+            >
+
+                <i class="bi bi-box-seam me-2"></i>
+
+                Quản lý sản phẩm
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                class="dropdown-item"
+                href="{{ url_for('admin.categories') }}"
+            >
+
+                <i class="bi bi-grid me-2"></i>
+
+                Quản lý danh mục
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</li>
+
+{% endif %}
 
         <!-- CART -->
 
