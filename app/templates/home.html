@@ -59,74 +59,86 @@ Trang chủ - PetShop
     <div class="row g-4">
 
         <div class="col-6 col-md-4 col-lg-2">
-            <div class="card text-center h-100">
-                <div class="card-body">
-                    <div class="fs-1">🐶</div>
-                    <h6 class="mt-2">
-                        Thức ăn chó
-                    </h6>
+            <a href="{{ url_for('product.dogs') }}" class="text-decoration-none text-dark">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="fs-1">🐶</div>
+                        <h6 class="mt-2">
+                            Thức ăn chó
+                        </h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
 
 
         <div class="col-6 col-md-4 col-lg-2">
-            <div class="card text-center h-100">
-                <div class="card-body">
-                    <div class="fs-1">🐱</div>
-                    <h6 class="mt-2">
-                        Thức ăn mèo
-                    </h6>
+            <a href="{{ url_for('product.cats') }}" class="text-decoration-none text-dark">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="fs-1">🐱</div>
+                        <h6 class="mt-2">
+                            Thức ăn mèo
+                        </h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
 
 
         <div class="col-6 col-md-4 col-lg-2">
-            <div class="card text-center h-100">
-                <div class="card-body">
-                    <div class="fs-1">🎾</div>
-                    <h6 class="mt-2">
-                        Đồ chơi
-                    </h6>
+            <a href="{{ url_for('product.accessories') }}" class="text-decoration-none text-dark">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="fs-1">🎾</div>
+                        <h6 class="mt-2">
+                            Đồ chơi
+                        </h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
 
 
         <div class="col-6 col-md-4 col-lg-2">
-            <div class="card text-center h-100">
-                <div class="card-body">
-                    <div class="fs-1">🦴</div>
-                    <h6 class="mt-2">
-                        Phụ kiện
-                    </h6>
+            <a href="{{ url_for('product.accessories') }}" class="text-decoration-none text-dark">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="fs-1">🦴</div>
+                        <h6 class="mt-2">
+                            Phụ kiện
+                        </h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
 
 
         <div class="col-6 col-md-4 col-lg-2">
-            <div class="card text-center h-100">
-                <div class="card-body">
-                    <div class="fs-1">🧴</div>
-                    <h6 class="mt-2">
-                        Chăm sóc
-                    </h6>
+            <a href="{{ url_for('product.accessories') }}" class="text-decoration-none text-dark">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="fs-1">🧴</div>
+                        <h6 class="mt-2">
+                            Chăm sóc
+                        </h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
 
 
         <div class="col-6 col-md-4 col-lg-2">
-            <div class="card text-center h-100">
-                <div class="card-body">
-                    <div class="fs-1">🏠</div>
-                    <h6 class="mt-2">
-                        Chuồng & nhà
-                    </h6>
+            <a href="{{ url_for('product.accessories') }}" class="text-decoration-none text-dark">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="fs-1">🏠</div>
+                        <h6 class="mt-2">
+                            Chuồng & nhà
+                        </h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
 
     </div>
@@ -174,16 +186,18 @@ Trang chủ - PetShop
 
 
                 <!-- Nội dung -->
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
 
                     <h5 class="card-title">
                         {{ product.name }}
                     </h5>
 
-                    <p class="text-muted small">
+                    <p class="text-muted small product-desc">
                         {{ product.description[:80] if product.description else "Sản phẩm chất lượng dành cho thú cưng." }}
                     </p>
 
+
+                    <div class="mt-auto">
 
                     {% if product.sale_price %}
 
@@ -196,6 +210,8 @@ Trang chủ - PetShop
                     </div>
 
                     {% else %}
+
+                    <div class="old-price old-price-placeholder"></div>
 
                     <div class="price">
                         {{ "{:,.0f}".format(product.price) }} VNĐ
@@ -210,41 +226,43 @@ Trang chủ - PetShop
 
 
                     <form
-    method="POST"
-    action="{{ url_for(
-        'cart.add',
-        product_id=product.id
-    ) }}"
-    class="mt-2"
->
+                        method="POST"
+                        action="{{ url_for(
+                            'cart.add',
+                            product_id=product.id
+                        ) }}"
+                        class="mt-2"
+                    >
 
-    <input
-        type="hidden"
-        name="quantity"
-        value="1"
-    >
+                        <input
+                            type="hidden"
+                            name="quantity"
+                            value="1"
+                        >
 
-    <button
-        type="submit"
-        class="btn btn-petshop w-100"
-        {% if product.stock <= 0 %}disabled{% endif %}
-    >
+                        <button
+                            type="submit"
+                            class="btn btn-petshop w-100"
+                            {% if product.stock <= 0 %}disabled{% endif %}
+                        >
 
-        {% if product.stock > 0 %}
+                            {% if product.stock > 0 %}
 
-            <i class="bi bi-cart-plus"></i>
-            Thêm vào giỏ
+                                <i class="bi bi-cart-plus"></i>
+                                Thêm vào giỏ
 
-        {% else %}
+                            {% else %}
 
-            <i class="bi bi-x-circle"></i>
-            Hết hàng
+                                <i class="bi bi-x-circle"></i>
+                                Hết hàng
 
-        {% endif %}
+                            {% endif %}
 
-    </button>
+                        </button>
 
-</form>
+                    </form>
+
+                    </div>
 
                 </div>
 

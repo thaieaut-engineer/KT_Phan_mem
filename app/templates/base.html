@@ -75,7 +75,7 @@
                     <ul class="navbar-nav mx-auto">
 
                         <li class="nav-item">
-                            <a class="nav-link"
+                            <a class="nav-link {% if request.endpoint == 'home.index' %}active{% endif %}"
                                href="{{ url_for('home.index') }}">
                                 Trang chủ
                             </a>
@@ -83,7 +83,7 @@
 
                         <li class="nav-item">
                             <a
-                                class="nav-link"
+                                class="nav-link {% if request.endpoint == 'product.index' %}active{% endif %}"
                                 href="{{ url_for('product.index') }}"
                             >
                                 Sản phẩm
@@ -91,25 +91,29 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link {% if request.endpoint == 'product.dogs' %}active{% endif %}"
+                               href="{{ url_for('product.dogs') }}">
                                 Chó
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link {% if request.endpoint == 'product.cats' %}active{% endif %}"
+                               href="{{ url_for('product.cats') }}">
                                 Mèo
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link {% if request.endpoint == 'product.accessories' %}active{% endif %}"
+                               href="{{ url_for('product.accessories') }}">
                                 Phụ kiện
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link {% if request.endpoint == 'product.promotions' %}active{% endif %}"
+                               href="{{ url_for('product.promotions') }}">
                                 Khuyến mãi
                             </a>
                         </li>
@@ -121,11 +125,41 @@
                     <div class="d-flex align-items-center gap-3">
 
                         <!-- Search -->
-                        <a href="#"
-                           class="text-dark fs-5"
-                           title="Tìm kiếm">
-                            <i class="bi bi-search"></i>
-                        </a>
+                        <div class="header-search">
+                            <button
+                                type="button"
+                                id="headerSearchToggle"
+                                class="header-search-toggle"
+                                title="Tìm kiếm"
+                                aria-label="Mở ô tìm kiếm"
+                            >
+                                <i class="bi bi-search"></i>
+                            </button>
+
+                            <form
+                                id="headerSearchBox"
+                                class="header-search-box"
+                                method="GET"
+                                action="{{ url_for('product.index') }}"
+                            >
+                                <input
+                                    id="headerSearchInput"
+                                    type="search"
+                                    name="keyword"
+                                    class="form-control"
+                                    placeholder="Tìm sản phẩm..."
+                                    value="{{ request.args.get('keyword', '') }}"
+                                    autocomplete="off"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-petshop"
+                                >
+                                    Tìm
+                                </button>
+                            </form>
+                        </div>
 
                         <div class="header-actions">
 
@@ -408,16 +442,44 @@
 
                     <ul class="list-unstyled">
                         <li>
-                            <a href="#"
+                            <a href="{{ url_for('home.index') }}"
                                class="text-white text-decoration-none">
                                 Trang chủ
                             </a>
                         </li>
 
                         <li>
-                            <a href="#"
+                            <a href="{{ url_for('product.index') }}"
                                class="text-white text-decoration-none">
                                 Sản phẩm
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('product.dogs') }}"
+                               class="text-white text-decoration-none">
+                                Chó
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('product.cats') }}"
+                               class="text-white text-decoration-none">
+                                Mèo
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('product.accessories') }}"
+                               class="text-white text-decoration-none">
+                                Phụ kiện
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url_for('product.promotions') }}"
+                               class="text-white text-decoration-none">
+                                Khuyến mãi
                             </a>
                         </li>
 

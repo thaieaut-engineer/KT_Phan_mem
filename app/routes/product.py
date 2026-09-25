@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request
+from sqlalchemy import or_
 
 from app.models import Product, Category
 
@@ -10,12 +11,27 @@ product_bp = Blueprint(
 )
 
 
-@product_bp.route("/")
-def index():
+SECTION_META = {
+    "cho": {
+        "title": "Sản phẩm cho chó",
+        "subtitle": "Thức ăn, đồ chơi và phụ kiện dành cho chó.",
+    },
+    "meo": {
+        "title": "Sản phẩm cho mèo",
+        "subtitle": "Thức ăn, đồ chơi và phụ kiện dành cho mèo.",
+    },
+    "phu-kien": {
+        "title": "Phụ kiện thú cưng",
+        "subtitle": "Dây dắt, vòng cổ, đồ chơi và đồ dùng chăm sóc.",
+    },
+    "khuyen-mai": {
+        "title": "Khuyến mãi",
+        "subtitle": "Những sản phẩm đang giảm giá hấp dẫn.",
+    },
+}
 
-    # =========================
-    # Lấy tham số từ URL
-    # =========================
+
+def _render_catalog(section=None, list_endpoint="product.index"):
 
     keyword = request.args.get(
         "keyword",
@@ -41,33 +57,56 @@ def index():
         type=int
     )
 
-
-    # =========================
-    # Query sản phẩm
-    # =========================
-
     query = Product.query.filter_by(
         status="active"
     )
 
+    if section in ("cho", "meo", "phu-kien"):
+        query = query.join(Category)
 
-    # =========================
-    # Tìm kiếm
-    # =========================
-
-    if keyword:
-
+    if section == "cho":
         query = query.filter(
-            Product.name.ilike(f"%{keyword}%")
+            or_(
+                Category.name.ilike("%chó%"),
+                Product.name.ilike("%chó%"),
+                Product.description.ilike("%chó%"),
+            )
         )
 
+    elif section == "meo":
+        query = query.filter(
+            or_(
+                Category.name.ilike("%mèo%"),
+                Product.name.ilike("%mèo%"),
+                Product.description.ilike("%mèo%"),
+            )
+        )
 
-    # =========================
-    # Lọc danh mục
-    # =========================
+    elif section == "phu-kien":
+        query = query.filter(
+            or_(
+                Category.name.ilike("%phụ kiện%"),
+                Category.name.ilike("%đồ chơi%"),
+                Category.name.ilike("%chăm sóc%"),
+                Category.name.ilike("%chuồng%"),
+            )
+        )
+
+    elif section == "khuyen-mai":
+        query = query.filter(
+            Product.sale_price.isnot(None),
+            Product.sale_price > 0,
+        )
+
+    if keyword:
+        query = query.filter(
+            or_(
+                Product.name.ilike(f"%{keyword}%"),
+                Product.description.ilike(f"%{keyword}%"),
+            )
+        )
 
     if category_id:
-
         try:
             category_id_int = int(category_id)
 
@@ -78,45 +117,23 @@ def index():
         except ValueError:
             category_id = ""
 
-
-    # =========================
-    # Sắp xếp
-    # =========================
-
     if sort == "price_asc":
-
-        query = query.order_by(
-            Product.price.asc()
-        )
+        query = query.order_by(Product.price.asc())
 
     elif sort == "price_desc":
-
-        query = query.order_by(
-            Product.price.desc()
-        )
+        query = query.order_by(Product.price.desc())
 
     elif sort == "name_asc":
-
-        query = query.order_by(
-            Product.name.asc()
-        )
+        query = query.order_by(Product.name.asc())
 
     elif sort == "name_desc":
-
-        query = query.order_by(
-            Product.name.desc()
-        )
+        query = query.order_by(Product.name.desc())
 
     else:
+        query = query.order_by(Product.created_at.desc())
 
-        query = query.order_by(
-            Product.created_at.desc()
-        )
-
-
-    # =========================
-    # Phân trang
-    # =========================
+    if section in ("cho", "meo", "phu-kien"):
+        query = query.distinct()
 
     pagination = query.paginate(
         page=page,
@@ -124,15 +141,17 @@ def index():
         error_out=False
     )
 
-
-    # =========================
-    # Danh mục
-    # =========================
-
     categories = Category.query.filter_by(
         status=1
     ).all()
 
+    meta = SECTION_META.get(section, {})
+
+    page_title = meta.get("title", "Tất cả sản phẩm")
+    page_subtitle = meta.get(
+        "subtitle",
+        "Khám phá các sản phẩm dành cho thú cưng"
+    )
 
     return render_template(
         "product/list.html",
@@ -141,8 +160,49 @@ def index():
         categories=categories,
         keyword=keyword,
         selected_category=category_id,
-        selected_sort=sort
+        selected_sort=sort,
+        page_title=page_title,
+        page_subtitle=page_subtitle,
+        list_endpoint=list_endpoint,
     )
+
+
+@product_bp.route("/")
+def index():
+    return _render_catalog()
+
+
+@product_bp.route("/cho")
+def dogs():
+    return _render_catalog(
+        section="cho",
+        list_endpoint="product.dogs"
+    )
+
+
+@product_bp.route("/meo")
+def cats():
+    return _render_catalog(
+        section="meo",
+        list_endpoint="product.cats"
+    )
+
+
+@product_bp.route("/phu-kien")
+def accessories():
+    return _render_catalog(
+        section="phu-kien",
+        list_endpoint="product.accessories"
+    )
+
+
+@product_bp.route("/khuyen-mai")
+def promotions():
+    return _render_catalog(
+        section="khuyen-mai",
+        list_endpoint="product.promotions"
+    )
+
 
 @product_bp.route("/<int:product_id>")
 def detail(product_id):

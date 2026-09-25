@@ -2,7 +2,7 @@
 
 
 {% block title %}
-Sản phẩm - PetShop
+{{ page_title }} - PetShop
 {% endblock %}
 
 
@@ -17,11 +17,11 @@ Sản phẩm - PetShop
     <div class="text-center mb-5">
 
         <h1 class="fw-bold">
-            Tất cả sản phẩm
+            {{ page_title }}
         </h1>
 
         <p class="text-muted">
-            Khám phá các sản phẩm dành cho thú cưng
+            {{ page_subtitle }}
         </p>
 
     </div>
@@ -37,7 +37,7 @@ Sản phẩm - PetShop
 
             <form
                 method="GET"
-                action="{{ url_for('product.index') }}"
+                action="{{ url_for(list_endpoint) }}"
             >
 
                 <div class="row g-3">
@@ -207,7 +207,7 @@ Sản phẩm - PetShop
         {% if keyword or selected_category or selected_sort %}
 
         <a
-            href="{{ url_for('product.index') }}"
+            href="{{ url_for(list_endpoint) }}"
             class="btn btn-outline-secondary btn-sm"
         >
             <i class="bi bi-x-circle"></i>
@@ -473,7 +473,7 @@ Sản phẩm - PetShop
                 <a
                     class="page-link"
                     href="{{ url_for(
-                        'product.index',
+                        list_endpoint,
                         page=pagination.prev_num,
                         keyword=keyword,
                         category=selected_category,
@@ -515,7 +515,7 @@ Sản phẩm - PetShop
                     <a
                         class="page-link"
                         href="{{ url_for(
-                            'product.index',
+                            list_endpoint,
                             page=page_num,
                             keyword=keyword,
                             category=selected_category,
@@ -558,7 +558,7 @@ Sản phẩm - PetShop
                 <a
                     class="page-link"
                     href="{{ url_for(
-                        'product.index',
+                        list_endpoint,
                         page=pagination.next_num,
                         keyword=keyword,
                         category=selected_category,
