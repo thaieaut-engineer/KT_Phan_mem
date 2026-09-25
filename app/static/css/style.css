@@ -1,6 +1,7 @@
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f8f9fa;
+    font-family: "Be Vietnam Pro", Arial, Helvetica, sans-serif;
+    background-color: #fff8f3;
+    color: #2b2b2b;
 }
 
 
@@ -744,4 +745,428 @@ footer {
 .navbar-nav .nav-link.active {
     color: #ff6633;
     font-weight: 600;
+}
+
+/* ========================================
+   UI POLISH & EFFECTS
+======================================== */
+
+html {
+    scroll-behavior: smooth;
+}
+
+.site-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1040;
+    transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.site-navbar.is-scrolled {
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.12);
+    background: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(14px);
+}
+
+.navbar-brand {
+    letter-spacing: 0.5px;
+    transition: transform 0.25s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.04);
+}
+
+.navbar-nav .nav-link {
+    position: relative;
+    padding-left: 12px;
+    padding-right: 12px;
+    transition: color 0.2s ease;
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 4px;
+    height: 2px;
+    border-radius: 2px;
+    background: #ff6b35;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+}
+
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link.active::after {
+    transform: scaleX(1);
+}
+
+.top-bar {
+    font-size: 13px;
+    letter-spacing: 0.2px;
+    background: linear-gradient(90deg, #1f1f1f, #3a2418) !important;
+}
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 520px;
+    background:
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.7), transparent 35%),
+        linear-gradient(135deg, #fff3e8 0%, #ffd7bd 45%, #ffc3a0 100%);
+}
+
+.hero-glow {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    right: -80px;
+    top: -80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.28), transparent 70%);
+    animation: pulseGlow 5s ease-in-out infinite;
+}
+
+.hero-paws {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(255, 107, 53, 0.12) 1.5px, transparent 1.6px);
+    background-size: 28px 28px;
+    opacity: 0.5;
+}
+
+.hero-copy {
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.8s ease both;
+}
+
+.hero-badge {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.75);
+    color: #ff6b35;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.12);
+}
+
+.hero-highlight {
+    background: linear-gradient(90deg, #ff6b35, #ff9a62);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-mascot {
+    position: relative;
+    min-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.hero-emoji {
+    font-size: 120px;
+    line-height: 1;
+    filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.12));
+    animation: floatY 3.4s ease-in-out infinite;
+}
+
+.hero-emoji-cat {
+    animation-delay: 0.5s;
+    font-size: 108px;
+}
+
+.hero-orb {
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.7), rgba(255, 107, 53, 0.08) 70%);
+    z-index: -1;
+    animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.section-title {
+    position: relative;
+    padding-bottom: 12px;
+}
+
+.section-title::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 64px;
+    height: 4px;
+    margin-left: -32px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #ff6b35, #ffb347);
+}
+
+.category-card {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(43, 43, 43, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 16px 32px rgba(255, 107, 53, 0.16);
+}
+
+.category-card .fs-1 {
+    transition: transform 0.35s ease;
+}
+
+.category-card:hover .fs-1 {
+    transform: rotate(-8deg) scale(1.15);
+}
+
+.product-card {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(43, 43, 43, 0.06);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 22px 40px rgba(255, 107, 53, 0.18);
+}
+
+.product-image-container {
+    position: relative;
+    background:
+        linear-gradient(180deg, #fff 0%, #fff4ec 100%);
+}
+
+.product-image {
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.08);
+}
+
+.sale-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff4d4f, #ff6b35);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    box-shadow: 0 8px 16px rgba(255, 77, 79, 0.3);
+    animation: badgePop 0.6s ease both;
+}
+
+.btn-petshop {
+    position: relative;
+    overflow: hidden;
+    border-radius: 999px;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(255, 107, 53, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btn-petshop::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 70%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+}
+
+.btn-petshop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 24px rgba(255, 107, 53, 0.32);
+}
+
+.btn-petshop:hover::after {
+    animation: shine 0.7s ease;
+}
+
+.header-search-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.header-search-toggle:hover {
+    background: #fff3eb;
+    transform: rotate(-12deg) scale(1.08);
+}
+
+.header-search-box {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px) scale(0.98);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+.header-search-box.is-open {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.cart-badge {
+    animation: badgePop 0.5s ease both;
+}
+
+.feature-card {
+    height: 100%;
+    padding: 28px 20px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(43, 43, 43, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 32px rgba(255, 107, 53, 0.14);
+}
+
+.feature-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+    display: inline-block;
+    animation: floatY 3s ease-in-out infinite;
+}
+
+.features-section {
+    background:
+        linear-gradient(180deg, #fff8f3 0%, #ffffff 100%);
+}
+
+.site-footer a {
+    transition: color 0.2s ease, padding-left 0.2s ease;
+}
+
+.site-footer a:hover {
+    color: #ffb347 !important;
+    padding-left: 6px;
+}
+
+.back-to-top {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 1050;
+    width: 46px;
+    height: 46px;
+    border: none;
+    border-radius: 50%;
+    background: #ff6b35;
+    color: #fff;
+    font-size: 20px;
+    box-shadow: 0 12px 24px rgba(255, 107, 53, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+}
+
+.back-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    background: #e85a2a;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shine {
+    from { left: -120%; }
+    to { left: 140%; }
+}
+
+@keyframes badgePop {
+    0% { transform: scale(0.6); opacity: 0; }
+    70% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 34px;
+    }
+
+    .hero-emoji,
+    .hero-emoji-cat {
+        font-size: 72px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+
+    .reveal,
+    .hero-copy,
+    .hero-emoji,
+    .hero-glow,
+    .hero-orb,
+    .feature-icon,
+    .sale-badge,
+    .btn-petshop::after {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }
