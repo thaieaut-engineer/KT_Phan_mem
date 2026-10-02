@@ -17,6 +17,9 @@ from flask_login import (
 )
 
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash
+
+from sqlalchemy import or_
 
 from app import db
 
@@ -25,6 +28,9 @@ from app.models import (
     Product,
     Category,
     OrderItem,
+    User,
+    Address,
+    Cart,
 )
 
 admin_bp = Blueprint(
@@ -1517,4 +1523,531 @@ def toggle_category(category_id):
         url_for(
             "admin.categories"
         )
+    )
+
+
+# =========================================================
+# QUẢN LÝ TÀI KHOẢN
+# =========================================================
+
+@admin_bp.route("/users")
+@admin_required
+def users():
+
+    keyword = request.args.get(
+        "keyword",
+        ""
+    ).strip()
+
+    selected_role = request.args.get(
+        "role",
+        ""
+    ).strip()
+
+    selected_status = request.args.get(
+        "status",
+        ""
+    ).strip()
+
+    page = request.args.get(
+        "page",
+        1,
+        type=int
+    )
+
+    if page < 1:
+        page = 1
+
+    per_page = 10
+
+    query = User.query
+
+    if keyword:
+
+        like_keyword = f"%{keyword}%"
+
+        query = query.filter(
+            or_(
+                User.full_name.ilike(like_keyword),
+                User.email.ilike(like_keyword),
+                User.phone.ilike(like_keyword)
+            )
+        )
+
+    if selected_role in ("user", "admin"):
+
+        query = query.filter_by(
+            role=selected_role
+        )
+
+    if selected_status in ("active", "locked"):
+
+        query = query.filter_by(
+            status=selected_status
+        )
+
+    pagination = query.order_by(
+        User.id.desc()
+    ).paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+
+    users = pagination.items
+
+    return render_template(
+        "admin/users.html",
+        users=users,
+        pagination=pagination,
+        keyword=keyword,
+        selected_role=selected_role,
+        selected_status=selected_status,
+    )
+
+
+# =========================================================
+# CHI TIẾT TÀI KHOẢN
+# =========================================================
+
+@admin_bp.route("/users/<int:user_id>")
+@admin_required
+def user_detail(user_id):
+
+    user = User.query.filter_by(
+        id=user_id
+    ).first_or_404()
+
+    order_count = Order.query.filter_by(
+        user_id=user.id
+    ).count()
+
+    recent_orders = Order.query.filter_by(
+        user_id=user.id
+    ).order_by(
+        Order.id.desc()
+    ).limit(5).all()
+
+    address_count = Address.query.filter_by(
+        user_id=user.id
+    ).count()
+
+    return render_template(
+        "admin/user_detail.html",
+        user=user,
+        order_count=order_count,
+        recent_orders=recent_orders,
+        address_count=address_count,
+    )
+
+
+# =========================================================
+# THÊM TÀI KHOẢN
+# =========================================================
+
+@admin_bp.route(
+    "/users/them",
+    methods=["GET", "POST"]
+)
+@admin_required
+def add_user():
+
+    if request.method == "POST":
+
+        full_name = request.form.get(
+            "full_name",
+            ""
+        ).strip()
+
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
+
+        phone = request.form.get(
+            "phone",
+            ""
+        ).strip()
+
+        role = request.form.get(
+            "role",
+            "user"
+        ).strip()
+
+        status = request.form.get(
+            "status",
+            "active"
+        ).strip()
+
+        if not full_name or not email or not password:
+
+            flash(
+                "Vui lòng nhập họ tên, email và mật khẩu.",
+                "danger"
+            )
+
+            return render_template(
+                "admin/user_form.html",
+                user=None
+            )
+
+        if len(password) < 6:
+
+            flash(
+                "Mật khẩu phải có ít nhất 6 ký tự.",
+                "danger"
+            )
+
+            return render_template(
+                "admin/user_form.html",
+                user=None
+            )
+
+        if role not in ("user", "admin"):
+            role = "user"
+
+        if status not in ("active", "locked"):
+            status = "active"
+
+        existing_user = User.query.filter_by(
+            email=email
+        ).first()
+
+        if existing_user:
+
+            flash(
+                "Email đã được sử dụng.",
+                "danger"
+            )
+
+            return render_template(
+                "admin/user_form.html",
+                user=None
+            )
+
+        user = User(
+            full_name=full_name,
+            email=email,
+            password=generate_password_hash(
+                password
+            ),
+            phone=phone,
+            role=role,
+            status=status
+        )
+
+        db.session.add(user)
+
+        db.session.commit()
+
+        flash(
+            "Đã thêm tài khoản.",
+            "success"
+        )
+
+        return redirect(
+            url_for("admin.users")
+        )
+
+    return render_template(
+        "admin/user_form.html",
+        user=None
+    )
+
+
+# =========================================================
+# SỬA TÀI KHOẢN
+# =========================================================
+
+@admin_bp.route(
+    "/users/<int:user_id>/sua",
+    methods=["GET", "POST"]
+)
+@admin_required
+def edit_user(user_id):
+
+    user = User.query.filter_by(
+        id=user_id
+    ).first_or_404()
+
+    if request.method == "POST":
+
+        full_name = request.form.get(
+            "full_name",
+            ""
+        ).strip()
+
+        phone = request.form.get(
+            "phone",
+            ""
+        ).strip()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
+
+        role = request.form.get(
+            "role",
+            user.role
+        ).strip()
+
+        status = request.form.get(
+            "status",
+            user.status
+        ).strip()
+
+        if not full_name:
+
+            flash(
+                "Vui lòng nhập họ và tên.",
+                "danger"
+            )
+
+            return render_template(
+                "admin/user_form.html",
+                user=user
+            )
+
+        if password and len(password) < 6:
+
+            flash(
+                "Mật khẩu phải có ít nhất 6 ký tự.",
+                "danger"
+            )
+
+            return render_template(
+                "admin/user_form.html",
+                user=user
+            )
+
+        if role not in ("user", "admin"):
+            role = user.role
+
+        if status not in ("active", "locked"):
+            status = user.status
+
+        if user.id == current_user.id:
+
+            if role != "admin" or status != "active":
+
+                flash(
+                    "Không thể hạ quyền hoặc khóa tài khoản đang đăng nhập.",
+                    "warning"
+                )
+
+                return redirect(
+                    url_for(
+                        "admin.edit_user",
+                        user_id=user.id
+                    )
+                )
+
+        if user.role == "admin" and role != "admin":
+
+            admin_count = User.query.filter_by(
+                role="admin"
+            ).count()
+
+            if admin_count <= 1:
+
+                flash(
+                    "Không thể hạ quyền admin cuối cùng.",
+                    "warning"
+                )
+
+                return redirect(
+                    url_for(
+                        "admin.edit_user",
+                        user_id=user.id
+                    )
+                )
+
+        user.full_name = full_name
+        user.phone = phone
+        user.role = role
+        user.status = status
+
+        if password:
+
+            user.password = generate_password_hash(
+                password
+            )
+
+        db.session.commit()
+
+        flash(
+            "Đã cập nhật tài khoản.",
+            "success"
+        )
+
+        return redirect(
+            url_for("admin.users")
+        )
+
+    return render_template(
+        "admin/user_form.html",
+        user=user
+    )
+
+
+# =========================================================
+# KHÓA / MỞ KHÓA TÀI KHOẢN
+# =========================================================
+
+@admin_bp.route(
+    "/users/<int:user_id>/toggle",
+    methods=["POST"]
+)
+@admin_required
+def toggle_user(user_id):
+
+    user = User.query.filter_by(
+        id=user_id
+    ).first_or_404()
+
+    if user.id == current_user.id:
+
+        flash(
+            "Không thể khóa tài khoản đang đăng nhập.",
+            "warning"
+        )
+
+        return redirect(
+            url_for("admin.users")
+        )
+
+    if user.status == "active":
+
+        if user.role == "admin":
+
+            active_admin_count = User.query.filter_by(
+                role="admin",
+                status="active"
+            ).count()
+
+            if active_admin_count <= 1:
+
+                flash(
+                    "Không thể khóa admin đang hoạt động cuối cùng.",
+                    "warning"
+                )
+
+                return redirect(
+                    url_for("admin.users")
+                )
+
+        user.status = "locked"
+
+        flash(
+            f"Đã khóa tài khoản {user.email}.",
+            "success"
+        )
+
+    else:
+
+        user.status = "active"
+
+        flash(
+            f"Đã mở khóa tài khoản {user.email}.",
+            "success"
+        )
+
+    db.session.commit()
+
+    return redirect(
+        url_for("admin.users")
+    )
+
+
+# =========================================================
+# XÓA TÀI KHOẢN
+# =========================================================
+
+@admin_bp.route(
+    "/users/<int:user_id>/delete",
+    methods=["POST"]
+)
+@admin_required
+def delete_user(user_id):
+
+    user = User.query.filter_by(
+        id=user_id
+    ).first_or_404()
+
+    if user.id == current_user.id:
+
+        flash(
+            "Không thể xóa tài khoản đang đăng nhập.",
+            "warning"
+        )
+
+        return redirect(
+            url_for("admin.users")
+        )
+
+    if user.role == "admin":
+
+        admin_count = User.query.filter_by(
+            role="admin"
+        ).count()
+
+        if admin_count <= 1:
+
+            flash(
+                "Không thể xóa admin cuối cùng.",
+                "warning"
+            )
+
+            return redirect(
+                url_for("admin.users")
+            )
+
+    order_count = Order.query.filter_by(
+        user_id=user.id
+    ).count()
+
+    if order_count > 0:
+
+        user.status = "locked"
+
+        db.session.commit()
+
+        flash(
+            "Tài khoản đã có đơn hàng nên không thể xóa. Đã chuyển sang trạng thái khóa.",
+            "warning"
+        )
+
+        return redirect(
+            url_for("admin.users")
+        )
+
+    Address.query.filter_by(
+        user_id=user.id
+    ).delete()
+
+    cart = Cart.query.filter_by(
+        user_id=user.id
+    ).first()
+
+    if cart:
+
+        db.session.delete(cart)
+
+    db.session.delete(user)
+
+    db.session.commit()
+
+    flash(
+        "Đã xóa tài khoản.",
+        "success"
+    )
+
+    return redirect(
+        url_for("admin.users")
     )

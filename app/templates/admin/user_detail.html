@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}
+Chi tiết tài khoản - PetShop
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h1 class="fw-bold mb-0">
+            <i class="bi bi-person"></i>
+            Chi tiết tài khoản
+        </h1>
+
+        <a
+            href="{{ url_for('admin.users') }}"
+            class="btn btn-outline-dark"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Quay lại
+        </a>
+
+    </div>
+
+
+    {% with messages = get_flashed_messages(
+        with_categories=true
+    ) %}
+
+        {% for category, message in messages %}
+
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+
+    <div class="row g-4">
+
+        <div class="col-lg-5">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-3">
+                        {{ user.full_name }}
+                    </h5>
+
+                    {% if user.role == "admin" %}
+                        <span class="badge bg-danger">Quản trị viên</span>
+                    {% else %}
+                        <span class="badge bg-success">Khách hàng</span>
+                    {% endif %}
+
+                    {% if user.status == "active" %}
+                        <span class="badge bg-success">Hoạt động</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Đã khóa</span>
+                    {% endif %}
+
+                    <hr>
+
+                    <p class="mb-2">
+                        <i class="bi bi-envelope"></i>
+                        {{ user.email }}
+                    </p>
+
+                    <p class="mb-2">
+                        <i class="bi bi-telephone"></i>
+                        {{ user.phone or "Chưa cập nhật" }}
+                    </p>
+
+                    <p class="mb-2">
+                        <i class="bi bi-calendar"></i>
+                        {% if user.created_at %}
+                            {{ user.created_at.strftime("%d/%m/%Y %H:%M") }}
+                        {% endif %}
+                    </p>
+
+                    <p class="mb-0">
+                        <i class="bi bi-receipt"></i>
+                        {{ order_count }} đơn hàng
+                        ·
+                        {{ address_count }} địa chỉ
+                    </p>
+
+                    <hr>
+
+                    <a
+                        href="{{ url_for('admin.edit_user', user_id=user.id) }}"
+                        class="btn btn-petshop"
+                    >
+                        <i class="bi bi-pencil"></i>
+                        Sửa
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-7">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        Đơn hàng gần đây
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table class="table align-middle mb-0">
+
+                            <thead>
+                                <tr>
+                                    <th>Mã</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for order in recent_orders %}
+
+                                    <tr>
+
+                                        <td>
+                                            <strong>#{{ order.id }}</strong>
+                                        </td>
+
+                                        <td>
+                                            {{ "{:,.0f}".format(order.total_amount) }} VNĐ
+                                        </td>
+
+                                        <td>{{ order.order_status }}</td>
+
+                                        <td class="text-end">
+
+                                            <a
+                                                href="{{ url_for(
+                                                    'admin.order_detail',
+                                                    order_id=order.id
+                                                ) }}"
+                                                class="btn btn-outline-dark btn-sm"
+                                            >
+                                                Xem
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                {% else %}
+
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4 text-muted">
+                                            Chưa có đơn hàng.
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

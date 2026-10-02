@@ -13,7 +13,7 @@ Học phần: **Kiểm thử phần mềm**
 
 ---
 
-Website bán đồ thú cưng, xây dựng bằng **Python Flask** và **MySQL**. Ứng dụng hỗ trợ khách hàng duyệt sản phẩm, quản lý giỏ hàng, đặt hàng (COD), lưu địa chỉ giao hàng; phía quản trị có dashboard, quản lý sản phẩm, danh mục và đơn hàng.
+Website bán đồ thú cưng, xây dựng bằng **Python Flask** và **MySQL**. Ứng dụng hỗ trợ khách hàng duyệt sản phẩm, quản lý giỏ hàng, đặt hàng (COD), lưu địa chỉ giao hàng; phía quản trị có dashboard, quản lý sản phẩm, danh mục, đơn hàng và tài khoản.
 
 ## Công nghệ
 
@@ -39,6 +39,7 @@ Website bán đồ thú cưng, xây dựng bằng **Python Flask** và **MySQL**
 - Dashboard thống kê đơn hàng
 - Quản lý sản phẩm (thêm / sửa / xóa, ảnh)
 - Quản lý danh mục
+- Quản lý tài khoản (thêm / sửa, khóa, xóa)
 - Xem và cập nhật trạng thái đơn hàng
 
 ## Cài đặt
@@ -98,6 +99,7 @@ Mở [http://127.0.0.1:5000](http://127.0.0.1:5000).
 | `/dat-hang` | Thanh toán |
 | `/dat-hang/lich-su` | Lịch sử đơn |
 | `/admin` | Trang quản trị (cần tài khoản admin) |
+| `/admin/users` | Quản lý tài khoản |
 
 ## Cấu trúc dự án
 
