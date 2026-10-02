@@ -36,7 +36,7 @@ Website bán đồ thú cưng, xây dựng bằng **Python Flask** và **MySQL**
 
 **Quản trị** (`role = admin`)
 
-- Dashboard thống kê đơn hàng
+- Dashboard thống kê đơn hàng và biểu đồ (14 ngày, trạng thái, sản phẩm bán chạy)
 - Quản lý sản phẩm (thêm / sửa / xóa, ảnh)
 - Quản lý danh mục
 - Quản lý tài khoản (thêm / sửa, khóa, xóa)

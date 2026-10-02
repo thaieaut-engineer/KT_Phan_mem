@@ -1,5 +1,6 @@
 from functools import wraps
 import os
+from datetime import date, datetime, timedelta
 
 from flask import (
     Blueprint,
@@ -19,7 +20,7 @@ from flask_login import (
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 
 from app import db
 
@@ -101,6 +102,96 @@ def dashboard():
         order_status="cancelled"
     ).count()
 
+    total_users = User.query.count()
+
+    total_products = Product.query.count()
+
+    total_revenue = db.session.query(
+        func.coalesce(
+            func.sum(Order.total_amount),
+            0
+        )
+    ).filter(
+        Order.order_status == "completed"
+    ).scalar()
+
+    total_revenue = float(total_revenue or 0)
+
+    days = 14
+    today = date.today()
+    start_day = today - timedelta(days=days - 1)
+    start_dt = datetime.combine(
+        start_day,
+        datetime.min.time()
+    )
+
+    daily_rows = db.session.query(
+        func.date(Order.created_at).label("day"),
+        func.count(Order.id).label("order_count"),
+        func.coalesce(
+            func.sum(Order.total_amount),
+            0
+        ).label("revenue")
+    ).filter(
+        Order.created_at >= start_dt
+    ).group_by(
+        func.date(Order.created_at)
+    ).all()
+
+    daily_map = {}
+
+    for row in daily_rows:
+
+        day_value = row.day
+
+        if hasattr(day_value, "strftime"):
+            day_key = day_value.strftime("%Y-%m-%d")
+        else:
+            day_key = str(day_value)[:10]
+
+        daily_map[day_key] = {
+            "count": int(row.order_count or 0),
+            "revenue": float(row.revenue or 0),
+        }
+
+    chart_labels = []
+    chart_order_counts = []
+    chart_revenues = []
+
+    for offset in range(days):
+
+        current_day = start_day + timedelta(days=offset)
+        day_key = current_day.strftime("%Y-%m-%d")
+        item = daily_map.get(
+            day_key,
+            {
+                "count": 0,
+                "revenue": 0,
+            }
+        )
+
+        chart_labels.append(
+            current_day.strftime("%d/%m")
+        )
+        chart_order_counts.append(item["count"])
+        chart_revenues.append(item["revenue"])
+
+    top_product_rows = db.session.query(
+        OrderItem.product_name,
+        func.sum(OrderItem.quantity).label("qty")
+    ).group_by(
+        OrderItem.product_name
+    ).order_by(
+        func.sum(OrderItem.quantity).desc()
+    ).limit(5).all()
+
+    chart_product_labels = [
+        row.product_name for row in top_product_rows
+    ]
+    chart_product_qty = [
+        int(row.qty or 0) for row in top_product_rows
+    ]
+
     return render_template(
         "admin/dashboard.html",
         total_orders=total_orders,
@@ -109,6 +200,21 @@ def dashboard():
         shipping_orders=shipping_orders,
         completed_orders=completed_orders,
         cancelled_orders=cancelled_orders,
+        total_users=total_users,
+        total_products=total_products,
+        total_revenue=total_revenue,
+        chart_labels=chart_labels,
+        chart_order_counts=chart_order_counts,
+        chart_revenues=chart_revenues,
+        chart_product_labels=chart_product_labels,
+        chart_product_qty=chart_product_qty,
+        chart_status_counts=[
+            pending_orders,
+            confirmed_orders,
+            shipping_orders,
+            completed_orders,
+            cancelled_orders,
+        ],
     )
 
 
