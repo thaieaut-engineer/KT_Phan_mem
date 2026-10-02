@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetShop — Figma UI</title>
+  <style>
+    :root {
+      --figma: #2c2c2c;
+      --figma-bar: #2c2c2c;
+      --figma-side: #2c2c2c;
+      --cream: #fff8f3;
+      --orange: #ff6b35;
+      --orange-dark: #e85a2a;
+      --text: #2b2b2b;
+      --muted: #7a7a7a;
+      --danger: #e63946;
+      --white: #fff;
+      --line: #ececec;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--figma);
+      color: #ccc;
+      display: grid;
+      grid-template-rows: 48px 1fr;
+      grid-template-columns: 220px 1fr;
+    }
+    .top {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 0 16px;
+      background: #1e1e1e;
+      border-bottom: 1px solid #111;
+    }
+    .brand {
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--orange);
+    }
+    .zoom { margin-left: auto; font-size: 12px; color: #999; }
+    .side {
+      background: #252525;
+      border-right: 1px solid #111;
+      padding: 14px 10px;
+      overflow: auto;
+    }
+    .side h3 {
+      margin: 0 8px 10px;
+      font-size: 11px;
+      letter-spacing: .08em;
+      color: #888;
+      font-weight: 600;
+    }
+    .side a {
+      display: block;
+      color: #cfcfcf;
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+    .side a:hover, .side a.active { background: #3a3a3a; color: #fff; }
+    .canvas {
+      overflow: auto;
+      background:
+        radial-gradient(#3a3a3a 1px, transparent 1px);
+      background-size: 18px 18px;
+      background-color: #2c2c2c;
+      padding: 48px 40px 80px;
+    }
+    .artboard {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto 56px;
+    }
+    .frame-stage {
+      width: 100%;
+      overflow: hidden;
+    }
+    .frame {
+      width: 1100px;
+      background: var(--cream);
+      color: var(--text);
+      border-radius: 2px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,.45);
+      transform-origin: top left;
+    }
+    .frame-label {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: #9ad0ff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .frame-label span { color: #888; font-weight: 400; font-size: 11px; }
+    .frame {
+      background: var(--cream);
+      color: var(--text);
+      border-radius: 2px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,.45);
+    }
+    .topbar {
+      background: #212529;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 22px;
+      font-size: 12px;
+    }
+    .nav {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .logo { color: var(--orange); font-weight: 800; font-size: 22px; }
+    .nav-links, .nav-actions {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      font-weight: 500;
+      align-items: center;
+    }
+    .badge {
+      background: var(--orange);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 10px;
+      padding: 1px 6px;
+      margin-left: 4px;
+    }
+    .page { padding: 28px 32px 36px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 0;
+      border-radius: 8px;
+      padding: 9px 16px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .btn-o { background: var(--orange); color: #fff; }
+    .btn-d { background: #212529; color: #fff; }
+    .btn-g { background: #fff; color: #222; border: 1px solid #d5d5d5; }
+    .btn-full { width: 100%; }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+      background: #fff;
+      font-family: inherit;
+    }
+    label { display: block; font-size: 13px; margin: 0 0 6px; font-weight: 600; }
+    .field { margin-bottom: 12px; }
+    h1 { margin: 0 0 8px; font-size: 26px; }
+    h2 { margin: 0 0 14px; font-size: 20px; }
+    h4 { margin: 0 0 10px; font-size: 16px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .price { color: var(--danger); font-weight: 700; }
+    .hero {
+      background: linear-gradient(135deg, #fff3e8, #ffe0cc);
+      padding: 44px 36px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .hero h1 { font-size: 38px; line-height: 1.15; }
+    .hero .hi { color: var(--orange); }
+    .chip {
+      display: inline-block;
+      background: #fff;
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .cats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+    .cat {
+      background: #fff;
+      text-align: center;
+      padding: 16px 6px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+    .cat .ico { font-size: 28px; display: block; margin-bottom: 6px; }
+    .products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .prod { background: #fff; border-radius: 12px; overflow: hidden; }
+    .ph {
+      height: 120px;
+      background: #f3f3f3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+    .prod .body { padding: 12px 14px 16px; }
+    .prod h5 { margin: 0 0 6px; font-size: 13px; min-height: 34px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; background: #fff; }
+    th, td { padding: 11px 10px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+    th { color: #666; font-weight: 600; background: #fafafa; }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .ok { background: #d1e7dd; color: #0f5132; }
+    .warn { background: #fff3cd; color: #664d03; }
+    .info { background: #cff4fc; color: #055160; }
+    .bad { background: #f8d7da; color: #842029; }
+    .gray { background: #e9ecef; color: #495057; }
+    .row { display: grid; gap: 16px; }
+    .row-2 { grid-template-columns: 1.6fr .9fr; }
+    .row-detail { grid-template-columns: 1fr 1fr; }
+    .row-addr { grid-template-columns: 1fr 1fr; }
+    .auth-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 56px 20px 64px;
+      background:
+        radial-gradient(circle at 20% 20%, #ffe8d8 0, transparent 40%),
+        var(--cream);
+    }
+    .auth { width: 400px; padding: 28px 26px 30px; }
+    .center { text-align: center; }
+    .link { color: var(--orange); font-weight: 600; }
+    .footer {
+      background: #212529;
+      color: #ccc;
+      padding: 22px 32px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 16px;
+      font-size: 12px;
+    }
+    .qty { display: flex; }
+    .qty input { width: 64px; text-align: center; }
+    .icon-btn { background: none; border: 0; color: var(--danger); font-size: 16px; }
+    .addr-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .radio {
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .radio.on { border-color: var(--orange); background: #fff6f1; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .search { display: grid; grid-template-columns: 1.4fr 1fr auto; gap: 8px; }
+    .acts { display: flex; gap: 4px; justify-content: flex-end; }
+    .mini { font-size: 11px; padding: 4px 8px; }
+    .sale {
+      position: absolute;
+      left: 8px; top: 8px;
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .rel { position: relative; }
+    .stock { color: #198754; font-size: 13px; font-weight: 600; }
+    .old { text-decoration: line-through; color: #888; font-size: 13px; }
+    .crumb { font-size: 12px; color: #888; margin-bottom: 14px; }
+    .crumb b { color: #333; }
+    .avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #ffd8c7; color: var(--orange-dark);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+    .line { display: flex; justify-content: space-between; font-size: 13px; margin: 8px 0; }
+    .split { border: 0; border-top: 1px solid var(--line); margin: 12px 0; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="dot"></span> PetShop · UI Kit</div>
+    <span class="muted" style="font-size:12px">Desktop 1100 · 10 frames</span>
+    <div class="zoom">100%</div>
+  </header>
+
+  <aside class="side">
+    <h3>PAGES</h3>
+    <a href="#login">01 Đăng nhập</a>
+    <a href="#register">02 Đăng ký</a>
+    <a href="#home">03 Trang chủ</a>
+    <a href="#detail">04 Chi tiết sản phẩm</a>
+    <a href="#cart">05 Giỏ hàng</a>
+    <a href="#address">06 Địa chỉ</a>
+    <a href="#order">07 Đơn hàng</a>
+    <a href="#admin-products">08 QL sản phẩm</a>
+    <a href="#admin-categories">09 QL danh mục</a>
+    <a href="#admin-orders">10 QL đơn hàng</a>
+  </aside>
+
+  <main class="canvas">
+
+    <section class="artboard" id="login">
+      <div class="frame-label">Đăng nhập <span>auth/login · 1100×720</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span><span>Chó</span><span>Mèo</span></div>
+          <div class="nav-actions"><span style="color:var(--orange)">Đăng nhập</span></div>
+        </div>
+        <div class="auth-wrap">
+          <div class="card auth">
+            <h2 class="center">Đăng nhập</h2>
+            <p class="center muted">Dùng email đã đăng ký để vào cửa hàng</p>
+            <div class="field"><label>Email</label><input value="admin@petshop.com"></div>
+            <div class="field"><label>Mật khẩu</label><input type="password" value="••••••••"></div>
+            <button class="btn btn-o btn-full">Đăng nhập</button>
+            <p class="center muted" style="margin:16px 0 0">Chưa có tài khoản? <span class="link">Đăng ký ngay</span></p>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="artboard" id="register">
+      <div class="frame-label">Đăng ký <span>auth/register · 1100×820</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span></div>
+          <div class="nav-actions"><span>Đăng nhập</span></div>
+        </div>
+        <div class="auth-wrap">
+          <div class="card auth">
+            <h2 class="center">Tạo tài khoản</h2>
+            <div class="field"><label>Họ và tên *</label><input value="Nguyễn Văn An"></div>
+            <div class="field"><label>Email *</label><input value="an@gmail.com"></div>
+            <div class="field"><label>Số điện thoại</label><input value="0911111111"></div>
+            <div class="field"><label>Mật khẩu *</label><input type="password" value="••••••••"></div>
+            <button class="btn btn-o btn-full">Đăng ký</button>
+            <p class="center muted" style="margin:16px 0 0">Đã có tài khoản? <span class="link">Đăng nhập</span></p>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="artboard" id="home">
+      <div class="frame-label">Trang chủ <span>home · 1100×980</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span><span>Chó</span><span>Mèo</span><span>Phụ kiện</span><span>Khuyến mãi</span></div>
+          <div class="nav-actions"><span>Giỏ hàng <span class="badge">2</span></span><span class="avatar">A</span></div>
+        </div>
+        <div class="hero">
+          <div>
+            <div class="chip">Cửa hàng thú cưng đáng yêu</div>
+            <h1>Chăm sóc thú cưng,<br>trao trọn <span class="hi">yêu thương</span></h1>
+            <p class="muted">Thức ăn, đồ chơi, phụ kiện và sản phẩm chăm sóc cho chó mèo.</p>
+            <button class="btn btn-o">Khám phá sản phẩm</button>
+          </div>
+          <div class="center" style="font-size:84px;line-height:1">🐶🐱</div>
+        </div>
+        <div class="page">
+          <h2 class="center">Danh mục sản phẩm</h2>
+          <div class="cats">
+            <div class="cat"><span class="ico">🐶</span>Thức ăn chó</div>
+            <div class="cat"><span class="ico">🐱</span>Thức ăn mèo</div>
+            <div class="cat"><span class="ico">🎾</span>Đồ chơi</div>
+            <div class="cat"><span class="ico">🦴</span>Phụ kiện</div>
+            <div class="cat"><span class="ico">🧴</span>Chăm sóc</div>
+            <div class="cat"><span class="ico">🏠</span>Chuồng &amp; nhà</div>
+          </div>
+          <h2 class="center" style="margin-top:32px">Sản phẩm nổi bật</h2>
+          <div class="products">
+            <div class="prod"><div class="ph rel"><span class="sale">Sale</span>🥘</div><div class="body"><h5>Royal Canin Mini Adult 2kg</h5><div class="old">320.000 VNĐ</div><div class="price">259.000 VNĐ</div></div></div>
+            <div class="prod"><div class="ph">🐟</div><div class="body"><h5>Whiskas vị cá ngừ 1.2kg</h5><div class="price">95.000 VNĐ</div></div></div>
+            <div class="prod"><div class="ph">🎾</div><div class="body"><h5>Bóng đồ chơi cao su</h5><div class="price">45.000 VNĐ</div></div></div>
+            <div class="prod"><div class="ph">🧴</div><div class="body"><h5>Sữa tắm thú cưng 500ml</h5><div class="price">120.000 VNĐ</div></div></div>
+          </div>
+        </div>
+        <div class="footer">
+          <div><strong style="color:#fff">PETSHOP</strong><p>Website bán đồ thú cưng.</p></div>
+          <div>Sản phẩm · Chó · Mèo · Phụ kiện</div>
+          <div>0900 000 000<br>support@petshop.com</div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="artboard" id="detail">
+      <div class="frame-label">Chi tiết sản phẩm <span>product/detail · 1100×640</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span></div>
+          <div class="nav-actions"><span>Giỏ hàng <span class="badge">2</span></span></div>
+        </div>
+        <div class="page">
+          <div class="crumb">Trang chủ / Sản phẩm / <b>Royal Canin Mini Adult 2kg</b></div>
+          <div class="card">
+            <div class="row row-detail">
+              <div class="ph" style="height:300px;border-radius:14px;font-size:88px">🥘</div>
+              <div>
+                <span class="pill ok">Thức ăn cho chó</span>
+                <h1 style="margin-top:10px">Royal Canin Mini Adult 2kg</h1>
+                <div class="old">320.000 VNĐ</div>
+                <div class="price" style="font-size:28px">259.000 VNĐ</div>
+                <h4 style="margin-top:16px">Mô tả sản phẩm</h4>
+                <p class="muted">Thức ăn hạt cho chó giống nhỏ, hỗ trợ tiêu hóa và da lông khỏe mạnh.</p>
+                <p><span class="stock">Còn hàng</span> · <span class="muted">48 sản phẩm</span></p>
+                <div class="field" style="max-width:140px"><label>Số lượng</label><input value="1"></div>
+                <button class="btn btn-o">Thêm vào giỏ hàng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="artboard" id="cart">
+      <div class="frame-label">Giỏ hàng <span>cart/index · 1100×560</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span></div>
+          <div class="nav-actions"><span>Giỏ hàng <span class="badge">2</span></span></div>
+        </div>
+        <div class="page">
+          <h1>Giỏ hàng</h1>
+          <div class="row row-2">
+            <div class="card" style="padding:0">
+              <div style="display:grid;grid-template-columns:70px 1fr 100px 90px 32px;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid #f0f0f0">
+                <div class="ph" style="height:56px;border-radius:8px;font-size:22px">🥘</div>
+                <div><strong>Royal Canin Mini Adult 2kg</strong><div class="muted">259.000 VNĐ</div></div>
+                <div class="qty"><input value="1"></div>
+                <strong>259.000</strong>
+                <button class="icon-btn">×</button>
+              </div>
+              <div style="display:grid;grid-template-columns:70px 1fr 100px 90px 32px;gap:10px;align-items:center;padding:14px 16px">
+                <div class="ph" style="height:56px;border-radius:8px;font-size:22px">🎾</div>
+                <div><strong>Bóng đồ chơi cao su</strong><div class="muted">45.000 VNĐ</div></div>
+                <div class="qty"><input value="2"></div>
+                <strong>90.000</strong>
+                <button class="icon-btn">×</button>
+              </div>
+            </div>
+            <div class="card">
+              <h4>Tổng đơn hàng</h4>
+              <div class="line"><span>Tạm tính</span><strong>349.000 VNĐ</strong></div>
+              <div class="line"><span>Phí vận chuyển</span><strong style="color:#198754">Miễn phí</strong></div>
+              <hr class="split">
+              <div class="line"><strong>Tổng cộng</strong><strong class="price">349.000 VNĐ</strong></div>
+              <button class="btn btn-o btn-full">Tiến hành đặt hàng</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="artboard" id="address">
+      <div class="frame-label">Địa chỉ nhận hàng <span>address/index · 1100×520</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span></div>
+          <div class="nav-actions"><span>Giỏ hàng <span class="badge">2</span></span></div>
+        </div>
+        <div class="page">
+          <div class="addr-head">
+            <h1>Địa chỉ nhận hàng</h1>
+            <button class="btn btn-o">Thêm địa chỉ</button>
+          </div>
+          <div class="row row-addr">
+            <div class="card">
+              <div class="addr-head"><div><h4>Nguyễn Văn An</h4><span class="pill ok">Mặc định</span></div></div>
+              <p class="muted" style="margin-top:0">0911111111</p>
+              <p>12 Nguyễn Huệ, Quận 1, TP.HCM</p>
+              <button class="btn btn-g mini">Đặt mặc định</button>
+              <button class="btn btn-g mini" style="color:#dc3545;border-color:#f1aeb5">Xóa</button>
+            </div>
+            <div class="card">
+              <div class="addr-head"><div><h4>Trần Thị Bình</h4></div></div>
+              <p class="muted" style="margin-top:0">0922222222</p>
+              <p>45 Trần Phú, Hà Đông, Hà Nội</p>
+              <button class="btn btn-g mini">Đặt mặc định</button>
+              <button class="btn btn-g mini" style="color:#dc3545;border-color:#f1aeb5">Xóa</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="artboard" id="order">
+      <div class="frame-label">Đơn hàng <span>order/checkout · 1100×680</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span></div>
+          <div class="nav-actions"><span>Giỏ hàng <span class="badge">2</span></span></div>
+        </div>
+        <div class="page">
+          <h1>Xác nhận đặt hàng</h1>
+          <div class="row row-2">
+            <div class="card">
+              <h4>Thông tin nhận hàng</h4>
+              <div class="radio on"><strong>Nguyễn Văn An</strong> <span class="pill ok">Mặc định</span><br><span class="muted">0911111111 · 12 Nguyễn Huệ, Q.1, TP.HCM</span></div>
+              <div class="radio"><strong>Trần Thị Bình</strong><br><span class="muted">0922222222 · 45 Trần Phú, Hà Đông, Hà Nội</span></div>
+              <button class="btn btn-g" style="margin:8px 0 16px">Thêm địa chỉ mới</button>
+              <h4>Phương thức thanh toán</h4>
+              <div class="radio on"><strong>Thanh toán khi nhận hàng (COD)</strong></div>
+              <div class="radio"><strong>Chuyển khoản ngân hàng</strong></div>
+              <div class="field" style="margin-top:12px"><label>Ghi chú đơn hàng</label><textarea rows="2">Giao giờ hành chính</textarea></div>
+            </div>
+            <div class="card">
+              <h4>Đơn hàng của bạn</h4>
+              <div class="line"><span>Royal Canin Mini Adult 2kg<br><span class="muted">1 × 259.000</span></span><strong>259.000</strong></div>
+              <div class="line"><span>Bóng đồ chơi cao su<br><span class="muted">2 × 45.000</span></span><strong>90.000</strong></div>
+              <hr class="split">
+              <div class="line"><span>Tạm tính</span><strong>349.000</strong></div>
+              <div class="line"><span>Phí ship</span><strong style="color:#198754">0</strong></div>
+              <div class="line"><strong>Tổng</strong><strong class="price">349.000 VNĐ</strong></div>
+              <button class="btn btn-o btn-full">Đặt hàng</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="artboard" id="admin-products">
+      <div class="frame-label">Quản trị sản phẩm <span>admin/products · 1100×620</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span><span style="color:var(--orange)">Quản trị</span></div>
+          <div class="nav-actions"><span class="avatar">QT</span></div>
+        </div>
+        <div class="page">
+          <div class="toolbar">
+            <div><h1>Quản lý sản phẩm</h1><div class="muted">Sản phẩm và tồn kho PetShop</div></div>
+            <button class="btn btn-o">Thêm sản phẩm</button>
+          </div>
+          <div class="card" style="margin-bottom:12px">
+            <div class="search">
+              <input placeholder="Tìm kiếm sản phẩm...">
+              <select><option>Tất cả danh mục</option></select>
+              <button class="btn btn-d">Tìm kiếm</button>
+            </div>
+          </div>
+          <div class="card" style="padding:0">
+            <table>
+              <thead><tr><th>ID</th><th>Sản phẩm</th><th>Danh mục</th><th>Giá</th><th>Tồn</th><th>Trạng thái</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>#12</td><td>Royal Canin Mini Adult 2kg</td><td>Thức ăn chó</td><td>259.000</td><td>48</td><td><span class="pill ok">active</span></td><td class="acts"><button class="btn btn-g mini">Sửa</button><button class="btn btn-g mini">Xóa</button></td></tr>
+                <tr><td>#11</td><td>Whiskas vị cá ngừ 1.2kg</td><td>Thức ăn mèo</td><td>95.000</td><td>30</td><td><span class="pill ok">active</span></td><td class="acts"><button class="btn btn-g mini">Sửa</button><button class="btn btn-g mini">Xóa</button></td></tr>
+                <tr><td>#10</td><td>Bóng đồ chơi cao su</td><td>Đồ chơi</td><td>45.000</td><td>80</td><td><span class="pill ok">active</span></td><td class="acts"><button class="btn btn-g mini">Sửa</button><button class="btn btn-g mini">Xóa</button></td></tr>
+                <tr><td>#9</td><td>Sữa tắm thú cưng 500ml</td><td>Chăm sóc</td><td>120.000</td><td>15</td><td><span class="pill warn">ẩn</span></td><td class="acts"><button class="btn btn-g mini">Sửa</button><button class="btn btn-g mini">Xóa</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="artboard" id="admin-categories">
+      <div class="frame-label">Quản trị danh mục <span>admin/categories · 1100×560</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span><span style="color:var(--orange)">Quản trị</span></div>
+          <div class="nav-actions"><span class="avatar">QT</span></div>
+        </div>
+        <div class="page">
+          <div class="toolbar">
+            <div><h1>Quản lý danh mục</h1><div class="muted">Nhóm sản phẩm của PetShop</div></div>
+            <button class="btn btn-o">Thêm danh mục</button>
+          </div>
+          <div class="card" style="margin-bottom:12px"><input placeholder="Tìm kiếm danh mục..."></div>
+          <div class="card" style="padding:0">
+            <table>
+              <thead><tr><th>ID</th><th>Tên danh mục</th><th>Mô tả</th><th>Trạng thái</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>#1</td><td>Thức ăn cho chó</td><td>Các loại thức ăn dành cho chó</td><td><span class="pill ok">Đang hoạt động</span></td><td class="acts"><button class="btn btn-g mini">Sửa</button><button class="btn btn-g mini">Ẩn</button><button class="btn btn-g mini">Xóa</button></td></tr>
+                <tr><td>#2</td><td>Thức ăn cho mèo</td><td>Các loại thức ăn dành cho mèo</td><td><span class="pill ok">Đang hoạt động</span></td><td class="acts"><button class="btn btn-g mini">Sửa</button><button class="btn btn-g mini">Ẩn</button><button class="btn btn-g mini">Xóa</button></td></tr>
+                <tr><td>#3</td><td>Đồ chơi thú cưng</td><td>Đồ chơi dành cho chó và mèo</td><td><span class="pill ok">Đang hoạt động</span></td><td class="acts"><button class="btn btn-g mini">Sửa</button><button class="btn btn-g mini">Ẩn</button><button class="btn btn-g mini">Xóa</button></td></tr>
+                <tr><td>#4</td><td>Phụ kiện</td><td>Dây dắt, vòng cổ, quần áo</td><td><span class="pill gray">Đã ẩn</span></td><td class="acts"><button class="btn btn-g mini">Sửa</button><button class="btn btn-g mini">Hiện</button><button class="btn btn-g mini">Xóa</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="artboard" id="admin-orders">
+      <div class="frame-label">Quản trị đơn hàng <span>admin/orders · 1100×560</span></div>
+      <div class="frame-stage">
+      <div class="frame">
+        <div class="topbar"><span>Chào mừng đến với PetShop</span><span>Hotline: 0900 000 000</span></div>
+        <div class="nav">
+          <div class="logo">PETSHOP</div>
+          <div class="nav-links"><span>Trang chủ</span><span>Sản phẩm</span><span style="color:var(--orange)">Quản trị</span></div>
+          <div class="nav-actions"><span class="avatar">QT</span></div>
+        </div>
+        <div class="page">
+          <div class="toolbar">
+            <h1>Quản lý đơn hàng</h1>
+            <button class="btn btn-g">Dashboard</button>
+          </div>
+          <div class="card" style="padding:0">
+            <table>
+              <thead><tr><th>Mã đơn</th><th>User</th><th>Ngày đặt</th><th>Tổng tiền</th><th>Thanh toán</th><th>Trạng thái</th><th></th></tr></thead>
+              <tbody>
+                <tr><td><strong>#108</strong></td><td>5</td><td>02/10/2026 09:12</td><td class="price">349.000 VNĐ</td><td><span class="pill warn">Chưa thanh toán</span></td><td><span class="pill gray">Chờ xác nhận</span></td><td><button class="btn btn-g mini">Xem</button></td></tr>
+                <tr><td><strong>#107</strong></td><td>3</td><td>01/10/2026 18:40</td><td class="price">215.000 VNĐ</td><td><span class="pill ok">Đã thanh toán</span></td><td><span class="pill info">Đang giao</span></td><td><button class="btn btn-g mini">Xem</button></td></tr>
+                <tr><td><strong>#106</strong></td><td>8</td><td>01/10/2026 11:05</td><td class="price">520.000 VNĐ</td><td><span class="pill ok">Đã thanh toán</span></td><td><span class="pill ok">Hoàn thành</span></td><td><button class="btn btn-g mini">Xem</button></td></tr>
+                <tr><td><strong>#105</strong></td><td>2</td><td>30/09/2026 16:22</td><td class="price">95.000 VNĐ</td><td><span class="pill warn">Chưa thanh toán</span></td><td><span class="pill bad">Đã hủy</span></td><td><button class="btn btn-g mini">Xem</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+  </main>
+  <script>
+    function fitFrames() {
+      document.querySelectorAll(".artboard").forEach(function (board) {
+        var stage = board.querySelector(".frame-stage");
+        var frame = board.querySelector(".frame");
+        if (!stage || !frame) return;
+        var scale = Math.min(1, stage.clientWidth / 1100);
+        frame.style.transform = "scale(" + scale + ")";
+        stage.style.height = (frame.offsetHeight * scale) + "px";
+      });
+    }
+    window.addEventListener("resize", fitFrames);
+    window.addEventListener("load", fitFrames);
+    fitFrames();
+  </script>
+</body>
+</html>
