@@ -57,24 +57,14 @@
 
                     <div class="product-detail-image">
 
-                        {% if product.image %}
-
                         <img
                             src="{{ url_for(
                                 'static',
-                                filename='images/' + product.image
+                                filename=product.image_path
                             ) }}"
                             alt="{{ product.name }}"
                             class="img-fluid"
                         >
-
-                        {% else %}
-
-                        <div class="detail-no-image">
-                            🐾
-                        </div>
-
-                        {% endif %}
 
                     </div>
 
@@ -298,24 +288,15 @@
 
                 <div class="product-image-container">
 
-                    {% if item.image %}
-
                     <img
                         src="{{ url_for(
                             'static',
-                            filename='images/' + item.image
+                            filename=item.image_path
                         ) }}"
                         class="product-image"
                         alt="{{ item.name }}"
+                        loading="lazy"
                     >
-
-                    {% else %}
-
-                    <div class="no-image">
-                        🐾
-                    </div>
-
-                    {% endif %}
 
                 </div>
 

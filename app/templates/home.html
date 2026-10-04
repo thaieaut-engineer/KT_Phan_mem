@@ -179,21 +179,12 @@ Trang chủ - PetShop
                     <span class="sale-badge">Sale</span>
                     {% endif %}
 
-                    {% if product.image %}
-
                     <img
-                        src="{{ url_for('static', filename='images/' + product.image) }}"
+                        src="{{ url_for('static', filename=product.image_path) }}"
                         class="product-image w-100"
                         alt="{{ product.name }}"
+                        loading="lazy"
                     >
-
-                    {% else %}
-
-                    <div class="no-image">
-                        🐾
-                    </div>
-
-                    {% endif %}
 
                 </div>
 

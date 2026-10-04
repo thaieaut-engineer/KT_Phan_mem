@@ -72,21 +72,14 @@ Giỏ hàng - PetShop
 
                                         <div class="cart-image">
 
-                                            {% if item.product.image %}
-
                                                 <img
                                                     src="{{ url_for(
                                                         'static',
-                                                        filename='images/' ~ item.product.image
+                                                        filename=item.product.image_path
                                                     ) }}"
                                                     alt="{{ item.product.name }}"
+                                                    loading="lazy"
                                                 >
-
-                                            {% else %}
-
-                                                <span>🐾</span>
-
-                                            {% endif %}
 
                                         </div>
 

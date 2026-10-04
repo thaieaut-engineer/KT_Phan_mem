@@ -246,15 +246,16 @@
                         </small>
 
 
-                        {% if product and product.image %}
+                        {% if product %}
 
                             <div class="mt-3">
 
                                 <img
                                     src="{{ url_for(
                                         'static',
-                                        filename='uploads/products/' ~ product.image
+                                        filename=product.image_path
                                     ) }}"
+                                    alt="{{ product.name }}"
                                     style="
                                         width:120px;
                                         height:120px;
