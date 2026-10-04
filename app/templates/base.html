@@ -36,11 +36,8 @@
 
 <body>
 
-    <!-- HEADER -->
-    <header>
-
-        <!-- Top bar -->
-        <div class="top-bar bg-dark text-white py-2">
+    <!-- Top bar -->
+    <div class="top-bar bg-dark text-white py-2">
             <div class="container d-flex justify-content-between">
                 <span>
                     🐾 Chào mừng đến với PetShop
@@ -52,6 +49,9 @@
             </div>
         </div>
 
+
+    <!-- HEADER -->
+    <header class="site-header">
 
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg bg-white shadow-sm site-navbar">
@@ -447,100 +447,125 @@
         <i class="bi bi-arrow-up"></i>
     </button>
 
-    <footer class="site-footer bg-dark text-white mt-5">
+    <footer class="site-footer">
 
-        <div class="container py-5">
+        <div class="container">
 
-            <div class="row">
+            <div class="row g-5 footer-main">
 
-                <div class="col-md-4">
-                    <h4>🐾 PETSHOP</h4>
+                <div class="col-lg-5 col-md-6">
 
-                    <p>
-                        Cửa hàng cung cấp sản phẩm,
-                        thức ăn và phụ kiện dành cho
-                        thú cưng.
+                    <a
+                        href="{{ url_for('home.index') }}"
+                        class="footer-brand"
+                    >
+                        <span class="footer-brand-icon" aria-hidden="true">
+                            <i class="bi bi-paw-fill"></i>
+                        </span>
+                        <span>
+                            PETSHOP
+                            <small>Người bạn của thú cưng</small>
+                        </span>
+                    </a>
+
+                    <p class="footer-description">
+                        Thức ăn, đồ chơi và phụ kiện được chọn để mỗi ngày
+                        bên người bạn nhỏ thêm vui và trọn vẹn.
                     </p>
+
+                    <div class="footer-highlights" aria-label="Danh mục sản phẩm">
+                        <span>Thức ăn</span>
+                        <span>Đồ chơi</span>
+                        <span>Phụ kiện</span>
+                    </div>
+
                 </div>
 
 
-                <div class="col-md-4">
-                    <h5>Liên kết</h5>
+                <div class="col-lg-3 col-md-6">
 
-                    <ul class="list-unstyled">
+                    <h2 class="footer-heading">Khám phá</h2>
+
+                    <ul class="footer-links">
                         <li>
-                            <a href="{{ url_for('home.index') }}"
-                               class="text-white text-decoration-none">
+                            <a href="{{ url_for('home.index') }}">
+                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
                                 Trang chủ
                             </a>
                         </li>
-
                         <li>
-                            <a href="{{ url_for('product.index') }}"
-                               class="text-white text-decoration-none">
-                                Sản phẩm
+                            <a href="{{ url_for('product.index') }}">
+                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                                Tất cả sản phẩm
                             </a>
                         </li>
-
                         <li>
-                            <a href="{{ url_for('product.dogs') }}"
-                               class="text-white text-decoration-none">
-                                Chó
+                            <a href="{{ url_for('product.dogs') }}">
+                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                                Dành cho chó
                             </a>
                         </li>
-
                         <li>
-                            <a href="{{ url_for('product.cats') }}"
-                               class="text-white text-decoration-none">
-                                Mèo
+                            <a href="{{ url_for('product.cats') }}">
+                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                                Dành cho mèo
                             </a>
                         </li>
-
                         <li>
-                            <a href="{{ url_for('product.accessories') }}"
-                               class="text-white text-decoration-none">
+                            <a href="{{ url_for('product.accessories') }}">
+                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
                                 Phụ kiện
                             </a>
                         </li>
-
                         <li>
-                            <a href="{{ url_for('product.promotions') }}"
-                               class="text-white text-decoration-none">
+                            <a href="{{ url_for('product.promotions') }}">
+                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
                                 Khuyến mãi
                             </a>
                         </li>
-
-                        <li>
-                            <a href="#"
-                               class="text-white text-decoration-none">
-                                Chính sách
-                            </a>
-                        </li>
                     </ul>
+
                 </div>
 
 
-                <div class="col-md-4">
-                    <h5>Liên hệ</h5>
+                <div class="col-lg-4">
 
-                    <p>
-                        <i class="bi bi-telephone"></i>
-                        0900 000 000
+                    <h2 class="footer-heading">Liên hệ với chúng tôi</h2>
+
+                    <p class="footer-contact-intro">
+                        Cần hỗ trợ chọn sản phẩm? PetShop luôn sẵn sàng lắng nghe.
                     </p>
 
-                    <p>
-                        <i class="bi bi-envelope"></i>
-                        support@petshop.com
-                    </p>
+                    <a class="footer-contact-item" href="tel:0900000000">
+                        <span class="footer-contact-icon" aria-hidden="true">
+                            <i class="bi bi-telephone"></i>
+                        </span>
+                        <span>
+                            <small>Hotline</small>
+                            <strong>0900 000 000</strong>
+                        </span>
+                    </a>
+
+                    <a class="footer-contact-item" href="mailto:support@petshop.com">
+                        <span class="footer-contact-icon" aria-hidden="true">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+                        <span>
+                            <small>Email hỗ trợ</small>
+                            <strong>support@petshop.com</strong>
+                        </span>
+                    </a>
+
                 </div>
 
             </div>
 
-        </div>
 
+            <div class="footer-bottom">
+                <span>© 2026 PetShop. Bảo lưu mọi quyền.</span>
+                <span>Chăm sóc thú cưng bằng cả sự yêu thương <i class="bi bi-heart-fill" aria-hidden="true"></i></span>
+            </div>
 
-        <div class="border-top border-secondary text-center py-3">
-            © 2026 PetShop. All rights reserved.
         </div>
 
     </footer>

@@ -58,10 +58,22 @@
 
                     {% for item in order.items %}
 
-                        <div class="d-flex justify-content-between border-bottom py-3">
+                        <div class="d-flex align-items-center gap-3 border-bottom py-3">
 
-                            <div>
+                            <img
+                                src="{{ url_for(
+                                    'static',
+                                    filename=item.product.image_path
+                                ) }}"
+                                alt="{{ item.product_name }}"
+                                class="rounded flex-shrink-0"
+                                width="72"
+                                height="72"
+                                style="object-fit: cover;"
+                                loading="lazy"
+                            >
 
+                            <div class="flex-grow-1">
                                 <strong>
                                     {{ item.product_name }}
                                 </strong>
@@ -80,7 +92,7 @@
                             </div>
 
 
-                            <strong>
+                            <strong class="ms-auto text-end">
 
                                 {{ "{:,.0f}".format(
                                     item.subtotal

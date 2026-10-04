@@ -42,12 +42,49 @@ Trang chủ - PetShop
             </div>
 
 
-            <div class="col-md-6 text-center">
+            <div class="col-md-6">
 
-                <div class="hero-mascot">
-                    <span class="hero-emoji hero-emoji-dog">🐶</span>
-                    <span class="hero-emoji hero-emoji-cat">🐱</span>
-                    <span class="hero-orb"></span>
+                <div class="hero-photo-stage">
+                    <div class="hero-photo-backdrop" aria-hidden="true"></div>
+
+                    <figure class="hero-photo-card mb-0">
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/products/hero-pets.jpg'
+                            ) }}"
+                            alt="Chú chó nhỏ vui vẻ chạy trên bãi cỏ"
+                            class="hero-photo"
+                            fetchpriority="high"
+                        >
+
+                        <figcaption class="hero-photo-caption">
+                            <span class="hero-caption-icon">
+                                <i class="bi bi-heart-fill"></i>
+                            </span>
+                            <span>
+                                <strong>Vui khỏe mỗi ngày</strong>
+                                <small>Yêu thương từ những điều nhỏ nhất</small>
+                            </span>
+                        </figcaption>
+                    </figure>
+
+                    <span class="hero-floating-label">
+                        <i class="bi bi-stars"></i>
+                        Niềm vui bốn chân
+                    </span>
+
+                    <div class="hero-cat-card">
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/products/cat-mouse-toy.jpg'
+                            ) }}"
+                            alt="Mèo cưng đang chơi đồ chơi"
+                            loading="lazy"
+                        >
+                        <span aria-hidden="true">🐾</span>
+                    </div>
                 </div>
 
             </div>

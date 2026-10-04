@@ -63,3 +63,7 @@ pet-carrier.jpg
 cat-house.jpg
   "110312-F-NW653-158 cat cage"
   Public domain - https://commons.wikimedia.org/wiki/File:110312-F-NW653-158_cat_cage.jpg
+
+hero-pets.jpg
+  "A Maltese Running in the Grass" by Pwnsey
+  CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:A_Maltese_Running_in_the_Grass.jpg
